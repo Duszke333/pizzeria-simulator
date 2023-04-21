@@ -19,6 +19,9 @@
                 //trzeba również dołączyć pliki znajdujące się "poziom wyżej", ale bez funkcji main (dlatego nie ma tu ../*.cpp, tylko wskazany jest konkretny plik)
                 "${workspaceFolder}/../food.cpp",
                 "${workspaceFolder}/../free_food_exception.cpp",
+                "${workspaceFolder}/../instant_food_exception.cpp",
+                "${workspaceFolder}/../food_already_done_exception.cpp",
+                "${workspaceFolder}/../pizza.cpp",
                 "-o",
                 "${workspaceFolder}/${workspaceFolderBasename}",
                 "-Wall",
