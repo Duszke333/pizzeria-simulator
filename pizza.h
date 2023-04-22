@@ -15,5 +15,5 @@ class Pizza : public Food {
         Size get_size() const noexcept;
         void set_size(Size new_size) noexcept;
 
-        friend std::ostream& operator<<(std::ostream& out, const Pizza pizza);
+        friend std::ostream& operator<<(std::ostream& out, const Pizza& pizza);
 };

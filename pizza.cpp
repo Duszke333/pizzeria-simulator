@@ -17,7 +17,7 @@ unsigned int Pizza::get_price() const noexcept {
             return 1.3 * base_price;
         default:
             return base_price;
-    };
+    }
 }
 
 Size Pizza::get_size() const noexcept {
@@ -30,7 +30,7 @@ void Pizza::set_size(Size new_size) noexcept {
 
 std::string pizza_sizes[4] = {"S", "M", "L", "XL"};
 
-std::ostream& operator<<(std::ostream& out, const Pizza pizza) {
+std::ostream& operator<<(std::ostream& out, const Pizza& pizza) {
     out << "Pizza: " << pizza.name << std::endl;
     out << "Size:  " << pizza_sizes[static_cast<int>(pizza.size)] << std::endl;
     out << "Price: " << pizza.get_price() / 100 << "." << pizza.get_price() % 100 << std::endl;
