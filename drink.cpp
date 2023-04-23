@@ -9,9 +9,9 @@ Drink::Drink(std::string the_name, unsigned int the_price, unsigned short prep_t
 unsigned int Drink::get_price() const noexcept {
     switch (vol) {
         case Volume::ml500:
-            return 1.2 * base_price;
+            return 1.2 * base_price + 1;
         case Volume::l1:
-            return 1.3 * base_price;
+            return 1.3 * base_price + 1;
         default:
             return base_price;
     }

@@ -5,6 +5,7 @@
 #include "../food_already_done_exception.h"
 #include "../pizza.h"
 #include "../drink.h"
+#include "../appetizer.h"
 
 
 TEST_CASE("Food tests", "[food]")
@@ -96,11 +97,11 @@ TEST_CASE("Pizza tests", "[pizza]")
     {
         CHECK(pizza.get_price() == 2999);
         pizza.set_size(Size::M);
-        CHECK(pizza.get_price() == 3298);
+        CHECK(pizza.get_price() == 3299);
         pizza.set_size(Size::L);
-        CHECK(pizza.get_price() == 3598);
+        CHECK(pizza.get_price() == 3599);
         pizza.set_size(Size::XL);
-        CHECK(pizza.get_price() == 3898);
+        CHECK(pizza.get_price() == 3899);
     }
 }
 
@@ -126,8 +127,19 @@ TEST_CASE("Drink tests", "[drink]")
     {
         CHECK(drink.get_price() == 799);
         drink.set_volume(Volume::ml500);
-        CHECK(drink.get_price() == 958);
+        CHECK(drink.get_price() == 959);
         drink.set_volume(Volume::l1);
-        CHECK(drink.get_price() == 1038);
+        CHECK(drink.get_price() == 1039);
     }
+}
+
+
+TEST_CASE("Appetizer tests", "[appetizer]")
+{
+    Appetizer app("Breadsticks", 1299, 1);
+
+    CHECK(app.get_name() == "Breadsticks");
+    CHECK(app.get_price() == 1299);
+    CHECK(app.get_remaining_time() == 1);
+    CHECK(app.is_ready() == false);
 }

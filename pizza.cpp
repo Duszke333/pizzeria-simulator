@@ -10,11 +10,11 @@ Pizza::Pizza(std::string the_name, unsigned int the_price, unsigned short prep_t
 unsigned int Pizza::get_price() const noexcept {
     switch (size) {
         case Size::M:
-            return 1.1 * base_price;
+            return 1.1 * base_price + 1;
         case Size::L:
-            return 1.2 * base_price;
+            return 1.2 * base_price + 1;
         case Size::XL:
-            return 1.3 * base_price;
+            return 1.3 * base_price + 1;
         default:
             return base_price;
     }
