@@ -1,0 +1,24 @@
+#pragma once
+#include <list>
+#include <memory>
+#include <vector>
+#include "food.h"
+#include "pizza.h"
+#include "drink.h"
+#include "appetizer.h"
+
+
+class Menu {
+    private:
+        std::list<std::unique_ptr<Food>> foods;
+    public:
+        void add_food(std::string the_name, unsigned int the_price, unsigned short prep_time);
+        void add_pizza(std::string the_name, unsigned int the_price, unsigned short prep_time, Size the_size);
+        void add_drink(std::string the_name, unsigned int the_price, unsigned short prep_time, Volume the_vol);
+        void add_appetizer(std::string the_name, unsigned int the_price, unsigned short prep_time);
+
+        unsigned int calculate_total_price() const noexcept;
+        Food find_by_name(std::string the_name);
+        void remove_by_name(std::string the_name);
+        friend std::ostream& operator<<(std::ostream& out, const Menu& menu);
+};
