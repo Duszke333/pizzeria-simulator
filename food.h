@@ -23,5 +23,8 @@ class Food {
 
         void prepare_food();
 
+        bool operator==(const Food& other) const noexcept;
+        bool operator!=(const Food& other) const noexcept;
+
         friend std::ostream& operator<<(std::ostream& out, const Food& food);
 };

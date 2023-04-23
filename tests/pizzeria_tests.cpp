@@ -6,6 +6,8 @@
 #include "../pizza.h"
 #include "../drink.h"
 #include "../appetizer.h"
+#include "../menu.h"
+#include "../food_not_found_exception.h"
 
 
 TEST_CASE("Food tests", "[food]")
@@ -143,3 +145,61 @@ TEST_CASE("Appetizer tests", "[appetizer]")
     CHECK(app.get_remaining_time() == 1);
     CHECK(app.is_ready() == false);
 }
+
+
+TEST_CASE("Menu tests", "[menu]")
+{
+    Menu menu;
+
+    SECTION("Add free food")
+    {
+        CHECK_THROWS(menu.add_food("Some food", 0, 12));
+        CHECK_THROWS(menu.add_pizza("Margherita", 0, 14, Size::S));
+        CHECK_THROWS(menu.add_drink("Water", 0, 1, Volume::ml330));
+        CHECK_THROWS(menu.add_appetizer("Garlic bread", 0, 13));
+    }
+
+    SECTION("Add instant food")
+    {
+        CHECK_THROWS(menu.add_food("Some food", 1, 0));
+        CHECK_THROWS(menu.add_pizza("Margherita", 12, 0, Size::S));
+        CHECK_THROWS(menu.add_drink("Water", 12, 0, Volume::ml330));
+        CHECK_THROWS(menu.add_appetizer("Garlic bread", 3, 0));
+    }
+
+    SECTION("Calculate total price")
+    {
+        menu.add_pizza("Margherita", 3199, 12, Size::XL);
+        menu.add_appetizer("Garlic bread", 1299, 12);
+        menu.add_drink("Water", 599, 1, Volume::l1);
+        unsigned int expected = 4159 + 1299 + 779;
+        CHECK(menu.calculate_total_price() == expected);
+    }
+
+    SECTION("Find food by name")
+    {
+        menu.add_pizza("Margherita", 3199, 12, Size::XL);
+        menu.add_appetizer("Garlic bread", 1299, 12);
+        menu.add_drink("Water", 599, 1, Volume::l1);
+        Food expected("Margherita", 3199, 12);
+        CHECK(menu.find_by_name("Margherita") == expected);
+    }
+
+    SECTION("Find food by name not in menu")
+    {
+        CHECK_THROWS(menu.find_by_name("Bread"));
+    }
+
+    SECTION("Remove food")
+    {
+        menu.add_pizza("Margherita", 3199, 12, Size::S);
+        menu.add_pizza("Margherita", 3199, 12, Size::M);
+        menu.add_pizza("Margherita", 3199, 12, Size::L);
+        menu.add_pizza("Margherita", 3199, 12, Size::XL);
+        Food expected("Margherita", 3199, 12);
+        CHECK(menu.find_by_name("Margherita") == expected);
+        menu.remove_by_name("Margherita");
+        CHECK_THROWS(menu.find_by_name("Margherita"));
+    }
+}
+

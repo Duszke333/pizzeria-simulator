@@ -24,6 +24,8 @@
                 "${workspaceFolder}/../pizza.cpp",
                 "${workspaceFolder}/../drink.cpp",
                 "${workspaceFolder}/../appetizer.cpp",
+                "${workspaceFolder}/../menu.cpp",
+                "${workspaceFolder}/../food_not_found_exception.cpp",
                 "-o",
                 "${workspaceFolder}/${workspaceFolderBasename}",
                 "-Wall",

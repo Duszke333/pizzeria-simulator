@@ -51,6 +51,17 @@ void Food::prepare_food() {
     if (preparation_time == 0) ready = true;
 }
 
+bool Food::operator==(const Food& other) const noexcept {
+    if (this->name == other.name &&
+        this->base_price == other.base_price &&
+        this->preparation_time == other.preparation_time) return true;
+    return false;
+}
+
+bool Food::operator!=(const Food& other) const noexcept {
+    return !(*this == other);
+}
+
 std::ostream& operator<<(std::ostream& out, const Food& food) {
     out << food.name << std::endl;
     out << "Price: " << food.base_price / 100 << "." << food.base_price % 100 << std::endl;
