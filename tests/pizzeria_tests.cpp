@@ -4,6 +4,7 @@
 #include "../instant_food_exception.h"
 #include "../food_already_done_exception.h"
 #include "../pizza.h"
+#include "../drink.h"
 
 
 TEST_CASE("Food tests", "[food]")
@@ -81,10 +82,14 @@ TEST_CASE("Pizza tests", "[pizza]")
     CHECK(pizza.get_name() == "Margherita");
     CHECK(pizza.get_price() == 2999);
     CHECK(pizza.get_size() == Size::S);
+    CHECK(pizza.get_remaining_time() == 12);
+    CHECK(pizza.is_ready() == false);
 
-    SECTION("inicialize with price = 0")
+    SECTION("size modification")
     {
-        CHECK_THROWS(Pizza("YAS", 0, 12, Size::S));
+        CHECK(pizza.get_size() == Size::S);
+        pizza.set_size(Size::XL);
+        CHECK(pizza.get_size() == Size::XL);
     }
 
     SECTION("get price for different sizes")
@@ -96,5 +101,33 @@ TEST_CASE("Pizza tests", "[pizza]")
         CHECK(pizza.get_price() == 3598);
         pizza.set_size(Size::XL);
         CHECK(pizza.get_price() == 3898);
+    }
+}
+
+
+TEST_CASE("Drink tests", "[drink]")
+{
+    Drink drink("Cola", 799, 12, Volume::ml330);
+
+    CHECK(drink.get_name() == "Cola");
+    CHECK(drink.get_price() == 799);
+    CHECK(drink.get_volume() == Volume::ml330);
+    CHECK(drink.get_remaining_time() == 12);
+    CHECK(drink.is_ready() == false);
+
+    SECTION("size modification")
+    {
+        CHECK(drink.get_volume() == Volume::ml330);
+        drink.set_volume(Volume::l1);
+        CHECK(drink.get_volume() == Volume::l1);
+    }
+
+    SECTION("get price for different sizes")
+    {
+        CHECK(drink.get_price() == 799);
+        drink.set_volume(Volume::ml500);
+        CHECK(drink.get_price() == 958);
+        drink.set_volume(Volume::l1);
+        CHECK(drink.get_price() == 1038);
     }
 }

@@ -22,6 +22,7 @@
                 "${workspaceFolder}/../instant_food_exception.cpp",
                 "${workspaceFolder}/../food_already_done_exception.cpp",
                 "${workspaceFolder}/../pizza.cpp",
+                "${workspaceFolder}/../drink.cpp",
                 "-o",
                 "${workspaceFolder}/${workspaceFolderBasename}",
                 "-Wall",
