@@ -9,6 +9,10 @@
 #include "../menu.h"
 #include "../food_not_found_exception.h"
 #include "../client.h"
+#include "../group.h"
+#include "../client_already_in_exception.h"
+#include "../client_already_awaiting_exception.h"
+#include "../client_not_invited_exception.h"
 
 
 TEST_CASE("Food tests", "[food]")
@@ -213,5 +217,170 @@ TEST_CASE("Client tests", "[client]")
     {
         cl.set_id(11);
         CHECK(cl.get_id() == 11);
+    }
+
+    SECTION("== and != operators")
+    {
+        Client c1(12);
+        Client c2(13);
+        CHECK(cl == c1);
+        CHECK(c1 != c2);
+    }
+}
+
+
+TEST_CASE("Group tests", "[group]")
+{
+    Group gr(1);
+    CHECK(gr.get_id() == 1);
+    CHECK(gr.get_group_size() == 0);
+    CHECK(gr.is_complete() == true);
+
+    SECTION("id modification")
+    {
+        gr.set_id(12);
+        CHECK(gr.get_id() == 12);
+    }
+
+    Client c1(1);
+    Client c2(2);
+    Client c3(3);
+
+    SECTION("add client")
+    {
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);
+        gr.add_client(c1);
+        CHECK(gr.get_group_size() == 1);
+        CHECK(gr.is_complete() == true);
+        gr.add_client(c2);
+        CHECK(gr.get_group_size() == 2);
+        CHECK(gr.is_complete() == true);
+        gr.add_client(c3);
+        CHECK(gr.get_group_size() == 3);
+        CHECK(gr.is_complete() == true);
+    }
+
+    SECTION("try adding the same client twice")
+    {
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);
+        gr.add_client(c1);
+        CHECK(gr.get_group_size() == 1);
+        CHECK(gr.is_complete() == true);
+        CHECK_THROWS(gr.add_client(c1));
+    }
+
+    SECTION("remove client")
+    {
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);
+        gr.add_client(c1);
+        CHECK(gr.get_group_size() == 1);
+        CHECK(gr.is_complete() == true);
+        gr.remove_client(c1);
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);
+    }
+
+    SECTION("remove the same client twice")
+    {
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);
+        gr.add_client(c1);
+        CHECK(gr.get_group_size() == 1);
+        CHECK(gr.is_complete() == true);
+        gr.remove_client(c1);
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);
+        gr.remove_client(c1);
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);
+    }
+
+    SECTION("remove client not in group")
+    {
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);
+        gr.remove_client(c1);
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);
+    }
+
+    SECTION("add awaiting")
+    {
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);
+        gr.add_awaiting(2);
+        CHECK(gr.get_group_size() == 1);
+        CHECK(gr.is_complete() == false);
+    }
+
+    SECTION("try adding the same awaiting twice")
+    {
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);
+        gr.add_awaiting(2);
+        CHECK(gr.get_group_size() == 1);
+        CHECK(gr.is_complete() == false);
+        CHECK_THROWS(gr.add_awaiting(2));
+    }
+
+    SECTION("remove awaiting")
+    {
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);
+        gr.add_awaiting(2);
+        CHECK(gr.get_group_size() == 1);
+        CHECK(gr.is_complete() == false);
+        gr.remove_awaiting(2);
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);
+    }
+
+    SECTION("remove the same awaiting twice")
+    {
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);
+        gr.add_awaiting(2);
+        CHECK(gr.get_group_size() == 1);
+        CHECK(gr.is_complete() == false);
+        gr.remove_awaiting(2);
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);
+        gr.remove_awaiting(2);
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);
+    }
+
+    SECTION("remove awaiting not in list")
+    {
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);
+        gr.remove_awaiting(2);
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);        
+    }
+
+    SECTION("join the group")
+    {
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);
+        gr.add_client(c1);
+        CHECK(gr.get_group_size() == 1);
+        CHECK(gr.is_complete() == true);
+        gr.add_awaiting(3);
+        CHECK(gr.get_group_size() == 2);
+        CHECK(gr.is_complete() == false);
+        gr.join_the_group(c3);
+        CHECK(gr.get_group_size() == 2);
+        CHECK(gr.is_complete() == true);
+    }
+
+    SECTION("join the group uninvited")
+    {
+        CHECK(gr.get_group_size() == 0);
+        CHECK(gr.is_complete() == true);
+        CHECK_THROWS(gr.join_the_group(c2));   
     }
 }
