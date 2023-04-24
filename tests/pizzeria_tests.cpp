@@ -8,6 +8,7 @@
 #include "../appetizer.h"
 #include "../menu.h"
 #include "../food_not_found_exception.h"
+#include "../client.h"
 
 
 TEST_CASE("Food tests", "[food]")
@@ -203,3 +204,14 @@ TEST_CASE("Menu tests", "[menu]")
     }
 }
 
+
+TEST_CASE("Client tests", "[client]")
+{
+    Client cl(12);
+    CHECK(cl.get_id() == 12);
+    SECTION("id modification")
+    {
+        cl.set_id(11);
+        CHECK(cl.get_id() == 11);
+    }
+}
