@@ -11,6 +11,13 @@
 class Menu {
     private:
         std::list<std::unique_ptr<Food>> foods;
+        std::vector<Pizza> pizzas;
+        std::vector<Drink> drinks;
+        std::vector<Appetizer> appetizers;
+
+        void remove_pizza(std::string the_name);
+        void remove_drink(std::string the_name);
+        void remove_appetizer(std::string the_name);
     public:
         void add_food(std::string the_name, unsigned int the_price, unsigned short prep_time);
         void add_pizza(std::string the_name, unsigned int the_price, unsigned short prep_time, Size the_size);

@@ -1,7 +1,25 @@
 #include <iostream>
+#include <algorithm>
 #include "menu.h"
 #include "food_not_found_exception.h"
 
+
+void Menu::remove_pizza(std::string the_name) {
+    pizzas.erase(std::remove_if(pizzas.begin(), pizzas.end(), [the_name](const Pizza& pi) {
+        return pi.get_name() == the_name;
+    }));
+}
+
+void Menu::remove_drink(std::string the_name) {
+    drinks.erase(std::remove_if(drinks.begin(), drinks.end(), [the_name](const Drink& dr) {
+        return dr.get_name() == the_name;
+    }));
+}
+void Menu::remove_appetizer(std::string the_name) {
+    appetizers.erase(std::remove_if(appetizers.begin(), appetizers.end(), [the_name](const Appetizer& ap) {
+        return ap.get_name() == the_name;
+    }));
+}
 
 void Menu::add_food(std::string the_name, unsigned int the_price, unsigned short prep_time) {
     std::unique_ptr<Food> added_food = std::make_unique<Food>(the_name, the_price, prep_time);
@@ -11,16 +29,19 @@ void Menu::add_food(std::string the_name, unsigned int the_price, unsigned short
 void Menu::add_pizza(std::string the_name, unsigned int the_price, unsigned short prep_time, Size the_size) {
     std::unique_ptr<Pizza> added_pizza = std::make_unique<Pizza>(the_name, the_price, prep_time, the_size);
     foods.push_back(std::move(added_pizza));
+    pizzas.push_back(Pizza(the_name, the_price, prep_time, the_size));
 }
 
 void Menu::add_drink(std::string the_name, unsigned int the_price, unsigned short prep_time, Volume the_vol) {
     std::unique_ptr<Drink> added_drink = std::make_unique<Drink>(the_name, the_price, prep_time, the_vol);
     foods.push_back(std::move(added_drink));
+    drinks.push_back(Drink(the_name, the_price, prep_time, the_vol));
 }
 
 void Menu::add_appetizer(std::string the_name, unsigned int the_price, unsigned short prep_time) {
     std::unique_ptr<Appetizer> added_appetizer = std::make_unique<Appetizer>(the_name, the_price, prep_time);
     foods.push_back(std::move(added_appetizer));
+    appetizers.push_back(Appetizer(the_name, the_price, prep_time));
 }
 
 unsigned int Menu::calculate_total_price() const noexcept {
