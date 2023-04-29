@@ -5,7 +5,7 @@
 #include "client_not_invited_exception.h"
 
 
-Group::Group(unsigned int id) :
+Group::Group(unsigned int id=0) :
     group_id(id),
     group_size(0),
     group_complete(true)
@@ -53,7 +53,7 @@ void Group::remove_awaiting(unsigned int client_id) noexcept {
     }
 }
 
-void Group::join_the_group(Client client) {
+void Group::join(Client client) {
     unsigned int client_id = client.get_id();
     auto it = std::find(awaiting_ids.begin(), awaiting_ids.end(), client_id);
     if (it == awaiting_ids.end()) throw ClientNotInvitedException();

@@ -11,7 +11,7 @@ class Group {
         std::vector<Client> clients;
         std::vector<unsigned int> awaiting_ids;
     public:
-        Group(unsigned int id);
+        Group(unsigned int id=0);
 
         unsigned int get_id();
         unsigned int get_group_size();
@@ -23,7 +23,7 @@ class Group {
         void add_awaiting(unsigned int client_id);
         void remove_awaiting(unsigned int client_id) noexcept;
 
-        void join_the_group(Client client); // client not invited exception here
+        void join(Client client);
 
         bool is_complete() const noexcept;
 
