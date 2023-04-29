@@ -2,7 +2,7 @@
 #include "food.h"
 #include "free_food_exception.h"
 #include "instant_food_exception.h"
-#include "food_already_done_exception.h"
+
 
 Food::Food(std::string the_name, unsigned int the_price, unsigned short prep_time) :
     name(the_name),
@@ -46,7 +46,7 @@ void Food::set_preparation_time(unsigned short new_time) {
 }
 
 void Food::prepare_food() {
-    if (ready == true) throw FoodAlreadyDoneException();
+    if (ready == true) return;
     preparation_time--;
     if (preparation_time == 0) ready = true;
 }
