@@ -248,6 +248,59 @@ TEST_CASE("Menu tests", "[menu]")
         menu.remove_by_name("Margherita");
         CHECK_THROWS(menu.find_by_name("Margherita"));
     }
+
+    SECTION("Random drink")
+    {
+        menu.add_drink("Coke", 599, 12, Volume::ml330);
+        menu.add_drink("Coke", 599, 12, Volume::ml500);
+        menu.add_drink("Coke", 599, 12, Volume::l1);
+        menu.add_drink("Coffee", 699, 13, Volume::ml330);
+        menu.add_drink("Coffee", 699, 13, Volume::ml500);
+        menu.add_drink("Coffee", 699, 13, Volume::l1);
+        
+        Drink expected1("Coke", 599, 12, Volume::ml500);
+        Drink expected2("Coffee", 699, 13, Volume::l1);
+
+        CHECK(menu.random_drink(7) == expected1);
+        CHECK(menu.random_drink(5) == expected2);
+    }
+
+    SECTION("Random appetizer")
+    {
+        menu.add_appetizer("Breadsticks", 1299, 3);
+        menu.add_appetizer("Garlic bread", 899, 2);
+
+        Appetizer expected1("Breadsticks", 1299, 3);
+        Appetizer expected2("Garlic bread", 899, 2);
+
+        CHECK(menu.random_appetizer(712) == expected1);
+        CHECK(menu.random_appetizer(2137) == expected2);
+    }
+
+    SECTION("Random pizza")
+    {
+        menu.add_pizza("Margherita", 2199, 4, Size::S);
+        menu.add_pizza("Margherita", 2199, 5, Size::M);
+        menu.add_pizza("Margherita", 2199, 6, Size::L);
+        menu.add_pizza("Margherita", 2199, 7, Size::XL);
+        menu.add_pizza("Pepperoni", 2499, 5, Size::S);
+        menu.add_pizza("Pepperoni", 2499, 6, Size::M);
+        menu.add_pizza("Pepperoni", 2499, 7, Size::L);
+        menu.add_pizza("Pepperoni", 2499, 8, Size::XL);
+
+        Pizza expected1("Pepperoni", 2499, 6, Size::M);
+        Pizza expected2("Margherita", 2199, 5, Size::M);
+
+        CHECK(menu.random_pizza(69) == expected1);
+        CHECK(menu.random_pizza(2137) == expected2);
+    }
+
+    SECTION("Random foods empty menu")
+    {
+        CHECK_THROWS(menu.random_drink(1));
+        CHECK_THROWS(menu.random_appetizer(2));
+        CHECK_THROWS(menu.random_pizza(3));
+    }
 }
 
 
