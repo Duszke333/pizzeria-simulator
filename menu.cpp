@@ -58,14 +58,25 @@ Food Menu::find_by_name(std::string the_name) {
 }
 
 void Menu::remove_by_name(std::string the_name) {
+    auto vector_eraser = foods.begin();
     auto it = foods.begin();
     while (it != foods.end()) {
         if ((*it) -> get_name() == the_name) {
             auto it_cp = it;
+            vector_eraser = it;
             ++it;
             foods.erase(it_cp);
         }
         else ++it;
+    }
+    if (auto pizza = dynamic_cast<Pizza*>((*vector_eraser).get())) {
+        remove_pizza(the_name);
+    }
+    else if (auto drink = dynamic_cast<Drink*>((*vector_eraser).get())) {
+        remove_drink(the_name);
+    }
+    else if (auto appetizer = dynamic_cast<Appetizer*>((*vector_eraser).get())) {
+        remove_appetizer(the_name);
     }
 }
 
