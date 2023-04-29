@@ -11,7 +11,8 @@ class Group {
         std::vector<Client> clients;
         std::vector<unsigned int> awaiting_ids;
     public:
-        Group(unsigned int id=0);
+        Group();
+        Group(unsigned int id);
 
         unsigned int get_id();
         unsigned int get_group_size();

@@ -5,7 +5,13 @@
 #include "client_not_invited_exception.h"
 
 
-Group::Group(unsigned int id=0) :
+Group::Group() :
+    group_id(0),
+    group_size(0),
+    group_complete(true)
+{}
+
+Group::Group(unsigned int id) :
     group_id(id),
     group_size(0),
     group_complete(true)
