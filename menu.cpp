@@ -69,24 +69,38 @@ void Menu::remove_by_name(std::string the_name) {
         }
         else ++it;
     }
-    if (auto pizza = dynamic_cast<Pizza*>((*vector_eraser).get())) {
+    if (dynamic_cast<Pizza*>((*vector_eraser).get())) {
         remove_pizza(the_name);
     }
-    else if (auto drink = dynamic_cast<Drink*>((*vector_eraser).get())) {
+    else if (dynamic_cast<Drink*>((*vector_eraser).get())) {
         remove_drink(the_name);
     }
-    else if (auto appetizer = dynamic_cast<Appetizer*>((*vector_eraser).get())) {
+    else if (dynamic_cast<Appetizer*>((*vector_eraser).get())) {
         remove_appetizer(the_name);
     }
 }
 
 std::ostream& operator<<(std::ostream& out, const Menu& menu) {
     out << "Menu contents: " << std::endl;
-    for (const auto& food_ptr : menu.foods) {
+    out << "=========================" << std::endl;
+    out << "Appetizers: " << std::endl;
+    for (const auto& food : menu.appetizers) {
         out << "-------------------------" << std::endl;
-        out << *food_ptr;
+        out << food;
     }
-    out << "-------------------------" << std::endl;
+    out << "=========================" << std::endl;
+    out << "Pizzas: " << std::endl;
+    for (const auto& food : menu.pizzas) {
+        out << "-------------------------" << std::endl;
+        out << food;
+    }
+    out << "=========================" << std::endl;
+    out << "Drinks: " << std::endl;
+    for (const auto& food : menu.drinks) {
+        out << "-------------------------" << std::endl;
+        out << food;
+    }
+    out << "=========================" << std::endl;
     unsigned int total = menu.calculate_total_price();
     out << "Total price: " << total / 100 << "." << total % 100 << std::endl;
     return out;
