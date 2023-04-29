@@ -2,7 +2,6 @@
 #include "../food.h"
 #include "../free_food_exception.h"
 #include "../instant_food_exception.h"
-#include "../food_already_done_exception.h"
 #include "../pizza.h"
 #include "../drink.h"
 #include "../appetizer.h"
@@ -13,6 +12,8 @@
 #include "../client_already_in_exception.h"
 #include "../client_already_awaiting_exception.h"
 #include "../client_not_invited_exception.h"
+#include "../order.h"
+#include "../order_empty_exception.h"
 
 
 TEST_CASE("Food tests", "[food]")
@@ -78,7 +79,9 @@ TEST_CASE("Food tests", "[food]")
         spag.prepare_food();
         CHECK(spag.get_remaining_time() == 0);
         CHECK(spag.is_ready() == true);
-        CHECK_THROWS(spag.prepare_food());
+        spag.prepare_food();
+        CHECK(spag.get_remaining_time() == 0);
+        CHECK(spag.is_ready() == true);
     }
 }
 
@@ -372,7 +375,7 @@ TEST_CASE("Group tests", "[group]")
         gr.add_awaiting(3);
         CHECK(gr.get_group_size() == 2);
         CHECK(gr.is_complete() == false);
-        gr.join_the_group(c3);
+        gr.join(c3);
         CHECK(gr.get_group_size() == 2);
         CHECK(gr.is_complete() == true);
     }
@@ -381,6 +384,175 @@ TEST_CASE("Group tests", "[group]")
     {
         CHECK(gr.get_group_size() == 0);
         CHECK(gr.is_complete() == true);
-        CHECK_THROWS(gr.join_the_group(c2));   
+        CHECK_THROWS(gr.join(c2));   
+    }
+}
+
+TEST_CASE("Order tests", "[order]")
+{
+    Order order;
+    CHECK(order.get_price() == 0);
+    CHECK(order.ready_to_serve[0] == false);
+    CHECK(order.ready_to_serve[1] == false);
+    CHECK(order.ready_to_serve[2] == false);
+    
+    SECTION("Add pizza")
+    {
+        Pizza p("Margherita", 3199, 5, Size::XL);
+        order.add_pizza(p);
+        CHECK(order.get_price() == 4159);
+    }
+
+    SECTION("Remove pizza")
+    {
+        Pizza p("Margherita", 3199, 5, Size::XL);
+        order.add_pizza(p);
+        CHECK(order.get_price() == 4159);
+        order.remove_pizza(p);
+        CHECK(order.get_price() == 0);
+        order.remove_pizza(p);
+        CHECK(order.get_price() == 0);
+    }    
+
+    SECTION("Add drink")
+    {
+        Drink d("Coke", 599, 1, Volume::l1);
+        order.add_drink(d);
+        CHECK(order.get_price() == 779);
+    }
+
+    SECTION("Remove drink")
+    {
+        Drink d("Coke", 599, 1, Volume::l1);
+        order.add_drink(d);
+        CHECK(order.get_price() == 779);
+        order.remove_drink(d);
+        CHECK(order.get_price() == 0);
+        order.remove_drink(d);
+        CHECK(order.get_price() == 0);
+    }
+
+    SECTION("Add appetizer")
+    {
+        Appetizer a("Breadsticks", 1299, 3);
+        order.add_appetizer(a);
+        CHECK(order.get_price() == 1299);
+    }
+
+    SECTION("Remove appetizer")
+    {
+        Appetizer a("Breadsticks", 1299, 3);
+        order.add_appetizer(a);
+        CHECK(order.get_price() == 1299);
+        order.remove_appetizer(a);
+        CHECK(order.get_price() == 0);
+        order.remove_appetizer(a);
+        CHECK(order.get_price() == 0);
+    }
+
+    SECTION("Prepare pizzas")
+    {
+        Pizza p1("Margherita", 2199, 3, Size::S);
+        Pizza p2("Pepperoni", 2599, 5, Size::S);
+        order.add_pizza(p1);
+        order.add_pizza(p2);
+        CHECK(order.get_price() == 4798);
+        CHECK(order.ready_to_serve[0] == false);
+        CHECK(order.ready_to_serve[1] == false);
+        CHECK(order.ready_to_serve[2] == false);
+        order.prepare_pizzas();
+        order.prepare_pizzas();
+        order.prepare_pizzas();
+        // Now p1 is ready
+        CHECK(order.ready_to_serve[2] == false);
+        order.prepare_pizzas();
+        order.prepare_pizzas();
+        // Now all pizzas are ready
+        CHECK(order.ready_to_serve[2] == true);
+        order.prepare_pizzas();
+        CHECK(order.ready_to_serve[2] == true);
+    }
+
+    SECTION("Prepare drinks")
+    {
+        Drink d1("Coke", 599, 1, Volume::ml330);
+        Drink d2("Coffee", 799, 2, Volume::ml330);
+        order.add_drink(d1);
+        order.add_drink(d2);
+        CHECK(order.get_price() == 1398);
+        CHECK(order.ready_to_serve[0] == false);
+        CHECK(order.ready_to_serve[1] == false);
+        CHECK(order.ready_to_serve[2] == false);
+        order.prepare_drinks();
+        // Now d1 is ready
+        CHECK(order.ready_to_serve[0] == false);
+        order.prepare_drinks();
+        // Now all drinks are ready
+        CHECK(order.ready_to_serve[0] == true);
+        CHECK(order.ready_to_serve[1] == false);
+        CHECK(order.ready_to_serve[2] == false);
+        order.prepare_drinks();
+        CHECK(order.ready_to_serve[0] == true);
+    }
+
+    SECTION("Prepare appetizers")
+    {
+        Appetizer a1("Breadsticks", 1299, 2);
+        Appetizer a2("Scallops", 1699, 3);
+        order.add_appetizer(a1);
+        order.add_appetizer(a2);
+        CHECK(order.get_price() == 2998);
+        CHECK(order.ready_to_serve[0] == false);
+        CHECK(order.ready_to_serve[1] == false);
+        CHECK(order.ready_to_serve[2] == false);
+        order.prepare_appetizers();
+        order.prepare_appetizers();
+        // Now a1 is ready
+        CHECK(order.ready_to_serve[1] == false);
+        order.prepare_appetizers();
+        // Now all appetizers are ready
+        CHECK(order.ready_to_serve[0] == false);
+        CHECK(order.ready_to_serve[1] == true);
+        CHECK(order.ready_to_serve[2] == false);
+        order.prepare_appetizers();
+        CHECK(order.ready_to_serve[1] == true);
+    }
+
+    SECTION("Prepare empty order")
+    {
+        CHECK(order.get_price() == 0);
+        CHECK_THROWS(order.prepare_appetizers());
+        CHECK_THROWS(order.prepare_drinks());
+        CHECK_THROWS(order.prepare_pizzas());
+    }
+
+    SECTION("Order clearing")
+    {
+        Pizza p1("Margherita", 2199, 3, Size::S);
+        Pizza p2("Pepperoni", 2599, 5, Size::S);
+        order.add_pizza(p1);
+        order.add_pizza(p2);
+        Drink d1("Coke", 599, 1, Volume::ml330);
+        Drink d2("Coffee", 799, 2, Volume::ml330);
+        order.add_drink(d1);
+        order.add_drink(d2);
+        Appetizer a1("Breadsticks", 1299, 2);
+        Appetizer a2("Scallops", 1699, 3);
+        order.add_appetizer(a1);
+        order.add_appetizer(a2);
+        CHECK(order.get_price() == 9194);
+        for (short i = 0; i < 5; i++) {
+            order.prepare_drinks();
+            order.prepare_appetizers();
+            order.prepare_pizzas();
+        }
+        CHECK(order.ready_to_serve[0] == true);
+        CHECK(order.ready_to_serve[1] == true);
+        CHECK(order.ready_to_serve[2] == true);
+        order.clear_order();
+        CHECK(order.get_price() == 0);
+        CHECK(order.ready_to_serve[0] == false);
+        CHECK(order.ready_to_serve[1] == false);
+        CHECK(order.ready_to_serve[2] == false);
     }
 }
