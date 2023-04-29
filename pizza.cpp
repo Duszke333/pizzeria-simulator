@@ -28,6 +28,17 @@ void Pizza::set_size(Size new_size) noexcept {
     size = new_size;
 }
 
+bool Pizza::operator==(const Pizza& other) const noexcept {
+    if (name == other.name &&
+        base_price == other.base_price &&
+        size == other.size) return true;
+    return false;
+}
+
+bool Pizza::operator!=(const Pizza& other) const noexcept {
+    return !(*this == other);
+}
+
 std::string pizza_sizes[4] = {"S", "M", "L", "XL"};
 
 std::ostream& operator<<(std::ostream& out, const Pizza& pizza) {

@@ -25,6 +25,17 @@ void Drink::set_volume(Volume new_volume) noexcept {
     vol = new_volume;
 }
 
+bool Drink::operator==(const Drink& other) const noexcept {
+    if (name == other.name &&
+        base_price == other.base_price &&
+        vol == other.vol) return true;
+    return false;
+}
+
+bool Drink::operator!=(const Drink& other) const noexcept {
+    return !(*this == other);
+}
+
 std::string volumes[3] = {"300 ml", " 500 ml", "1 l"};
 
 std::ostream& operator<<(std::ostream& out, const Drink& drink) {

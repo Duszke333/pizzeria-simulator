@@ -45,16 +45,15 @@ void Food::set_preparation_time(unsigned short new_time) {
     preparation_time = new_time;
 }
 
-void Food::prepare_food() {
+void Food::prepare() {
     if (ready == true) return;
     preparation_time--;
     if (preparation_time == 0) ready = true;
 }
 
 bool Food::operator==(const Food& other) const noexcept {
-    if (this->name == other.name &&
-        this->base_price == other.base_price &&
-        this->preparation_time == other.preparation_time) return true;
+    if (name == other.name &&
+        base_price == other.base_price) return true;
     return false;
 }
 

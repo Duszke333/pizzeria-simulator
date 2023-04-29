@@ -63,7 +63,7 @@ void Order::prepare_pizzas() {
     if (pizzas.size() == 0) throw OrderEmptyException();
     unsigned int statuses = 0;
     for (Pizza& pizza : pizzas) {
-        pizza.prepare_food();
+        pizza.prepare();
         if(pizza.is_ready()) statuses++;
     }
     if (statuses == pizzas.size()) ready_to_serve[2] = true;
@@ -73,7 +73,7 @@ void Order::prepare_drinks() {
     if (drinks.size() == 0) throw OrderEmptyException();
     unsigned int statuses = 0;
     for (Drink& drink : drinks) {
-        drink.prepare_food();
+        drink.prepare();
         if(drink.is_ready()) statuses++;
     }
     if (statuses == drinks.size()) ready_to_serve[0] = true;
@@ -83,7 +83,7 @@ void Order::prepare_appetizers() {
     if (appetizers.size() == 0) throw OrderEmptyException();
     unsigned int statuses = 0;
     for (Appetizer& appetizer : appetizers) {
-        appetizer.prepare_food();
+        appetizer.prepare();
         if(appetizer.is_ready()) statuses++;
     }
     if (statuses == appetizers.size()) ready_to_serve[1] = true;

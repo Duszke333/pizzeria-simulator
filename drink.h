@@ -14,5 +14,8 @@ class Drink : public Food {
         Volume get_volume() const noexcept;
         void set_volume(Volume new_volume) noexcept;
 
+        bool operator==(const Drink& other) const noexcept;
+        bool operator!=(const Drink& other) const noexcept;
+
         friend std::ostream& operator<<(std::ostream& out, const Drink& drink);
 };

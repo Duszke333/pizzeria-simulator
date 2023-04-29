@@ -7,6 +7,7 @@
 #include "../appetizer.h"
 #include "../menu.h"
 #include "../food_not_found_exception.h"
+#include "../no_food_exception.h"
 #include "../client.h"
 #include "../group.h"
 #include "../client_already_in_exception.h"
@@ -14,6 +15,9 @@
 #include "../client_not_invited_exception.h"
 #include "../order.h"
 #include "../order_empty_exception.h"
+#include "../table.h"
+#include "../table_not_ready_exception.h"
+#include "../invalid_group_size_exception.h"
 
 
 TEST_CASE("Food tests", "[food]")
@@ -70,18 +74,29 @@ TEST_CASE("Food tests", "[food]")
     {
         CHECK(spag.get_remaining_time() == 3);
         CHECK(spag.is_ready() == false);
-        spag.prepare_food();
+        spag.prepare();
         CHECK(spag.get_remaining_time() == 2);
         CHECK(spag.is_ready() == false);
-        spag.prepare_food();
+        spag.prepare();
         CHECK(spag.get_remaining_time() == 1);
         CHECK(spag.is_ready() == false);
-        spag.prepare_food();
+        spag.prepare();
         CHECK(spag.get_remaining_time() == 0);
         CHECK(spag.is_ready() == true);
-        spag.prepare_food();
+        spag.prepare();
         CHECK(spag.get_remaining_time() == 0);
         CHECK(spag.is_ready() == true);
+    }
+
+    SECTION("== and !=")
+    {
+        Food f1("Spaghetti carbanana", 1234, 13);
+        Food f2("Spaghetti carbanana", 124, 3);
+        Food f3("Spaghetti carbanana", 1234, 1);
+        f3.prepare();
+        CHECK(f1 == spag);
+        CHECK(f1 != f2);
+        CHECK(f1 == f3);
     }
 }
 
@@ -113,6 +128,14 @@ TEST_CASE("Pizza tests", "[pizza]")
         pizza.set_size(Size::XL);
         CHECK(pizza.get_price() == 3899);
     }
+
+    SECTION("== and !=")
+    {
+        Pizza p1("Margherita", 2999, 2, Size::S);
+        Pizza p2("Margherita", 2999, 12, Size::L);
+        CHECK(p1 == pizza);
+        CHECK(p1 != p2);
+    }
 }
 
 
@@ -141,6 +164,14 @@ TEST_CASE("Drink tests", "[drink]")
         drink.set_volume(Volume::l1);
         CHECK(drink.get_price() == 1039);
     }
+
+    SECTION("== and !=")
+    {
+        Drink d1("Cola", 799, 1, Volume::ml330);
+        Drink d2("Cola", 799, 12, Volume::l1);
+        CHECK(d1 == drink);
+        CHECK(d1 != d2);
+    }
 }
 
 
@@ -152,6 +183,14 @@ TEST_CASE("Appetizer tests", "[appetizer]")
     CHECK(app.get_price() == 1299);
     CHECK(app.get_remaining_time() == 1);
     CHECK(app.is_ready() == false);
+
+    SECTION("== and !=")
+    {
+        Appetizer a1("Breadsticks", 1299, 31);
+        Appetizer a2("Breadsticks", 1298, 1);
+        CHECK(a1 == app);
+        CHECK(a1 != a2);
+    }
 }
 
 
@@ -388,6 +427,7 @@ TEST_CASE("Group tests", "[group]")
     }
 }
 
+
 TEST_CASE("Order tests", "[order]")
 {
     Order order;
@@ -555,4 +595,13 @@ TEST_CASE("Order tests", "[order]")
         CHECK(order.ready_to_serve[1] == false);
         CHECK(order.ready_to_serve[2] == false);
     }
+}
+
+
+TEST_CASE("Table tests", "[table]")
+{
+    Table table(1, TableSize::standard);
+    CHECK(table.get_status() == Status::Free);
+    CHECK(table.get_id() == 1);
+    CHECK(table.get_size() == TableSize::standard);
 }

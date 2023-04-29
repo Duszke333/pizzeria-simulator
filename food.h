@@ -21,7 +21,7 @@ class Food {
         void set_price(unsigned int new_price);
         void set_preparation_time(unsigned short new_time);
 
-        void prepare_food();
+        void prepare();
 
         bool operator==(const Food& other) const noexcept;
         bool operator!=(const Food& other) const noexcept;
