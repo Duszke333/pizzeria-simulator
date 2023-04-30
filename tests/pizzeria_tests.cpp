@@ -408,6 +408,8 @@ TEST_CASE("Group tests", "[group]")
         CHECK(gr.is_complete() == true);
         gr.add_awaiting(2);
         CHECK(gr.get_group_size() == 1);
+        std::vector<unsigned int> expected = {2};
+        CHECK(gr.get_awaiting_ids() == expected);
         CHECK(gr.is_complete() == false);
     }
 
@@ -653,8 +655,177 @@ TEST_CASE("Order tests", "[order]")
 
 TEST_CASE("Table tests", "[table]")
 {
-    Table table(1, TableSize::standard);
+    Menu menu;
+    menu.add_pizza("Margherita", 2199, 4, Size::S);
+    menu.add_pizza("Margherita", 2199, 5, Size::M);
+    menu.add_pizza("Margherita", 2199, 6, Size::L);
+    menu.add_pizza("Margherita", 2199, 7, Size::XL);
+    menu.add_pizza("Pepperoni", 2499, 5, Size::S);
+    menu.add_pizza("Pepperoni", 2499, 6, Size::M);
+    menu.add_pizza("Pepperoni", 2499, 7, Size::L);
+    menu.add_pizza("Pepperoni", 2499, 8, Size::XL);
+    menu.add_appetizer("Breadsticks", 1299, 3);
+    menu.add_appetizer("Garlic bread", 899, 4);
+    menu.add_drink("Coke", 599, 1, Volume::ml330);
+    menu.add_drink("Coke", 599, 1, Volume::ml500);
+    menu.add_drink("Coke", 599, 1, Volume::l1);
+    menu.add_drink("Coffee", 699, 2, Volume::ml330);
+    menu.add_drink("Coffee", 699, 2, Volume::ml500);
+    menu.add_drink("Coffee", 699, 2, Volume::l1);
+
+    Table table(1, TableSize::standard, menu);
     CHECK(table.get_status() == Status::Free);
     CHECK(table.get_id() == 1);
+    CHECK(table.get_earnings() == 0);
     CHECK(table.get_size() == TableSize::standard);
+    CHECK(table.get_group().get_group_size() == 0);
+    CHECK(table.get_group().get_id() == 0);
+    CHECK(table.ready_for_action() == true);
+
+    SECTION("Set id")
+    {
+        table.set_id(2);
+        CHECK(table.get_id() == 2);
+    }
+
+    SECTION("Set size")
+    {
+        table.set_size(TableSize::big);
+        CHECK(table.get_size() == TableSize::big);
+    }
+
+    SECTION("Set status")
+    {
+        table.set_status(Status::WaitingForMenu);
+        CHECK(table.get_status() == Status::WaitingForMenu);
+        table.set_status(Status::PreparingToOrder);
+        CHECK(table.get_status() == Status::PreparingToOrder);
+        table.set_status(Status::WaitingForDrinks);
+        CHECK(table.get_status() == Status::WaitingForDrinks);
+        table.set_status(Status::WaitingForAppetizers);
+        CHECK(table.get_status() == Status::WaitingForAppetizers);
+        table.set_status(Status::WaitingForPizzas);
+        CHECK(table.get_status() == Status::WaitingForPizzas);
+        table.set_status(Status::WaitingForReceipt);
+        CHECK(table.get_status() == Status::WaitingForReceipt);
+        table.set_status(Status::ReadyToPay);
+        CHECK(table.get_status() == Status::ReadyToPay);
+    }
+
+    SECTION("Set group")
+    {
+        Group group(12);
+        group.add_client(Client(1));
+        group.add_client(Client(2));
+        group.add_client(Client(3));
+        group.add_client(Client(4));
+        table.set_group(group);
+        CHECK(table.get_group().get_group_size() == 4);
+        CHECK(table.get_group().get_id() == 12);
+    }
+
+    Group group(12);
+    group.add_client(Client(1));
+    group.add_client(Client(2));
+    group.add_awaiting(3);
+    group.add_awaiting(4);
+    table.set_group(group);
+    std::vector<unsigned int> expected = {3, 4};
+    CHECK(table.get_awaiting_ids() == expected);
+
+    SECTION("Bring to table")
+    {
+        table.bring_to_table(3);
+        std::vector<unsigned int> expected1 = {4};
+        CHECK(table.get_awaiting_ids() == expected1);
+        table.bring_to_table(4);
+        std::vector<unsigned int> expected2 = {};
+        CHECK(table.get_awaiting_ids() == expected2);
+    }
+
+    SECTION("Bring to table not awaiting")
+    {
+        CHECK_THROWS(table.bring_to_table(1));
+    }
+
+    table.set_group(Group());
+
+    SECTION("Interaction")
+    {
+        // Sitting at the table
+        CHECK(table.ready_for_action() == true);
+        CHECK(table.get_status() == Status::Free);
+        table.set_group(group);
+        table.interact(1);
+        // Recieving menu
+        CHECK(table.ready_for_action() == true);
+        CHECK(table.get_status() == Status::WaitingForMenu);
+        table.interact(2);
+        // Ordering
+        CHECK(table.ready_for_action() == false);
+        CHECK(table.get_status() == Status::PreparingToOrder);
+        CHECK_THROWS(table.interact(3)); // Won't order as group is incomplete
+        table.update_status();
+        CHECK(table.ready_for_action() == false); // Still not ready as group is incomplete
+        table.bring_to_table(Client(3));
+        table.bring_to_table(Client(4));
+        table.update_status();
+        CHECK(table.ready_for_action() == true); // Ready as group is complete
+        table.interact(3);
+        // Order should be now:
+        // Drinks: Coke S, M, L; Coffee S (waiting time = 2)
+        // Appetizers: 2x Garlic bread; 2x Breadsticks (waiting time = 4)
+        // Pizzas: Margherita S, M; Pepperoni L, XL (waiting time = 8)
+        unsigned int expected_price = 599 + 719 + 779 + 699 + 2 * 1299 + 2 * 899 + 2199 + 2419 + 2999 + 3249;
+        CHECK(table.get_order().get_price() == expected_price);
+
+        // Getting drinks
+        CHECK(table.ready_for_action() == false);
+        CHECK(table.get_status() == Status::WaitingForDrinks);
+        CHECK_THROWS(table.interact(4)); // Won't get drinks as they're not ready
+        table.update_status();
+        CHECK(table.ready_for_action() == false); // Still not ready as drinks are not ready
+        table.prepare_order();
+        table.prepare_order(); // times are now: Drinks - 0, Appetizers - 2, Pizzas - 5
+        table.update_status();
+        CHECK(table.ready_for_action() == true); // Ready as drinks are now ready
+        table.interact(4);
+        // Getting appetizers
+        CHECK(table.ready_for_action() == false);
+        CHECK(table.get_status() == Status::WaitingForAppetizers);
+        CHECK_THROWS(table.interact(5)); // Won't get appetizers as they're not ready
+        table.update_status();
+        CHECK(table.ready_for_action() == false); // Still not ready as appetizers are not ready
+        table.prepare_order();
+        table.prepare_order(); // times are now: Drinks - 0, Appetizers - 0, Pizzas - 4
+        table.update_status();
+        CHECK(table.ready_for_action() == true); // Ready as appetizers are now ready
+        table.interact(5);
+        // Getting pizzas
+        CHECK(table.ready_for_action() == false);
+        CHECK(table.get_status() == Status::WaitingForPizzas);
+        CHECK_THROWS(table.interact(6)); // Won't get pizzas as they're not ready
+        table.update_status();
+        CHECK(table.ready_for_action() == false); // Still not ready as pizzas are not ready
+        table.prepare_order();
+        table.prepare_order();
+        table.prepare_order();
+        table.prepare_order(); // times are now: Drinks - 0, Appetizers - 0, Pizzas - 0
+        table.update_status();
+        CHECK(table.ready_for_action() == true); // Ready as pizzas are now ready
+        table.interact(6);
+        // Getting receipt
+        CHECK(table.ready_for_action() == true);
+        CHECK(table.get_status() == Status::WaitingForReceipt);
+        table.interact(7);
+        // Paying
+        CHECK(table.ready_for_action() == true);
+        CHECK(table.get_status() == Status::ReadyToPay);
+        table.interact(8);
+
+        CHECK(table.get_earnings() == expected_price);
+        CHECK(table.get_group().get_group_size() == 0);
+        CHECK(table.get_status() == Status::Free);
+        CHECK(table.get_order().get_price() == 0);
+    }
 }

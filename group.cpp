@@ -59,6 +59,10 @@ void Group::remove_awaiting(unsigned int client_id) noexcept {
     }
 }
 
+std::vector<unsigned int> Group::get_awaiting_ids() const noexcept {
+    return awaiting_ids;
+}
+
 void Group::join(Client client) {
     unsigned int client_id = client.get_id();
     auto it = std::find(awaiting_ids.begin(), awaiting_ids.end(), client_id);

@@ -25,6 +25,8 @@ class Group {
         void add_awaiting(unsigned int client_id);
         void remove_awaiting(unsigned int client_id) noexcept;
 
+        std::vector<unsigned int> get_awaiting_ids() const noexcept;
+
         void join(Client client);
 
         bool is_complete() const noexcept;
