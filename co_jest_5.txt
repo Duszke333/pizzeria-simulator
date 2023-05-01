@@ -1,0 +1,11 @@
+Co zrobię:
+- W klasie menu unique_ptr zniknie prawdopodobnie (muszę skonsultować z Panią)
+- Losowanie liczb
+- Czytanie z pliku
+- Więcej grzechów nie pamiętam
+
+Co zostało do zrobienia:
+- Dołączenie kucharzy do programu
+- Kelnerzy
+- Symulacja
+- Zapisywanie stanu do pliku
