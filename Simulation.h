@@ -6,11 +6,11 @@
 #include "menu.h"
 #include "table.h"
 #include "food.h"
+#include "RandomNumber.cpp"
 #include <vector>
 #include <string>
 #include <iostream>
 #include <chrono>
-#include <random>
 #include <thread>
 
 // Must be ordered in this order
@@ -24,7 +24,7 @@
 // During KitchenAccident, basically nothing happens since
 // the kitchen can't operate and prepare food
 enum class Event {
-    ModTable = 20, Nothing = 72, NewTable = 92, DelTable = 97, KitchenAccident = 100
+    ModTable = 20, Nothing = 62, NewTable = 92, DelTable = 97, KitchenAccident = 100
 };
 
 class Simulation {
@@ -37,8 +37,6 @@ private:
     void update_seed();
     void update_event();
     Event new_random_event() const noexcept;
-    unsigned rnum(const unsigned& bot, const unsigned& top) const noexcept;
-    // unsigned rand_seed() const noexcept;
     void sleep(const unsigned short& ms) const;
     void end() const;
 

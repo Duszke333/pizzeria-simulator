@@ -42,17 +42,12 @@ void Simulation::update_event() {
     update_seed();
 }
 
-unsigned Simulation::rnum(const unsigned& bot, const unsigned& top) const noexcept {
-    std::uniform_int_distribution<unsigned> range(bot, top);
-    std::mt19937 generator(seed);
-    return range(generator);
-}
-
 Event Simulation::new_random_event() const noexcept {
-    unsigned r100(rnum(1, 100));
-    if (r100 < static_cast<unsigned short>(Event::ModTable)) return Event::ModTable;
-    else if (r100 < static_cast<unsigned short>(Event::NewTable)) return Event::Nothing;
-    else if (r100 < static_cast<unsigned short>(Event::DelTable)) return Event::NewTable;
-    else if (r100 < static_cast<unsigned short>(Event::KitchenAccident)) return Event::DelTable;
+    RandomNumber R100(seed, 1, 100);
+    long long r100 = R100.get_value();
+    if (r100 <= static_cast<unsigned short>(Event::ModTable)) return Event::ModTable;
+    else if (r100 <= static_cast<unsigned short>(Event::NewTable)) return Event::Nothing;
+    else if (r100 <= static_cast<unsigned short>(Event::DelTable)) return Event::NewTable;
+    else if (r100 <= static_cast<unsigned short>(Event::KitchenAccident)) return Event::DelTable;
     else return Event::Nothing;
 }
