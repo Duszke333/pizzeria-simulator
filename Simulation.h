@@ -12,6 +12,7 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <algorithm>
 
 // Must be ordered in this order
 // Chance of getting Event = [Event value] - [previous Event value]
@@ -35,14 +36,18 @@ private:
     std::vector<Table> new_tables;
     Event current_event = Event::NewTable;
 
+    // Update seed and event - Randomizers
+
     void update_seed();
     void update_event();
+
     // Handlers
 
     void handle_event(const Event &event);
     void handle_mod_table();
     void handle_nothing();
     void handle_new_table();
+    void handle_del_table();
 
     Event new_random_event() const noexcept;
     void sleep(const unsigned short& ms) const;

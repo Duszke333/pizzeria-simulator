@@ -27,6 +27,9 @@ void Simulation::handle_event(const Event &event) {
     case Event::NewTable:
         handle_new_table();
         break;
+    case Event::DelTable:
+        handle_del_table();
+        break;
     }
 }
 
@@ -51,8 +54,12 @@ void Simulation::handle_mod_table() {
             //
             table.prepare_order();
             table.update_status();
-        } else
-            table.interact(seed);
+        } else {
+            std::cout << table.interact(seed);
+            // Erase from memory if there's need
+            if (table.get_status() == Status::Free)
+                handle_del_table();
+        }
     }
 }
 
@@ -77,6 +84,22 @@ void Simulation::handle_new_table() {
     //
     active_tables.push_back(new_table);
     new_tables.erase(new_tables.begin());
+}
+
+void Simulation::handle_del_table() {
+    for (const Table &table : active_tables) {
+        if (table.get_status() == Status::Free) {
+            if (table.ready_for_action()) {
+                //
+                std::cout << table
+                    << "\nDecided against dining in proi pizzeria and left...\n";
+                //
+            }
+            auto it = std::find(active_tables.begin(), active_tables.end(), table);
+            active_tables.erase(it);
+            break;
+        }
+    }
 }
 
 void Simulation::end() const {
