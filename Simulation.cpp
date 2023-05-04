@@ -9,7 +9,7 @@ void Simulation::start() {
         //
         sleep(200);
         //
-        std::cout << "It's " << get_curr_event_str() << "!!\n";
+        std::cout << "---" << get_curr_event_str() << "---\n";
         handle_event(current_event);
         update_event();
     }
@@ -77,7 +77,7 @@ void Simulation::handle_nothing() {
 }
 
 void Simulation::handle_new_table() {
-    const Table new_table = new_tables.front();
+    const Table &new_table(new_tables.front());
     //
     std::cout << "New Clients flood the pizzeria!\nIt's a rush!\n";
     sleep(100);
@@ -85,7 +85,7 @@ void Simulation::handle_new_table() {
         << "has been assigned at Table no. " << new_table.get_id()
         << std::endl;
     //
-    active_tables.push_back(new_table);
+    active_tables.push_back(std::move(new_table));
     new_tables.erase(new_tables.begin());
 }
 
