@@ -36,7 +36,7 @@
 // During KitchenAccident, basically nothing happens since
 // the kitchen can't operate and prepare food
 enum class Event {
-    ModTable = 20, Nothing = 62, NewTable = 92, DelTable = 97, KitchenAccident = 100
+    ModTable = 30, Nothing = 62, NewTable = 92, DelTable = 97, KitchenAccident = 100
 };
 
 class Simulation {

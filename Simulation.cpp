@@ -4,12 +4,13 @@
 // MUST start at NewTable, rolls after
 void Simulation::start() {
     for (; time != 0; --time) {
-        sleep(200);
         //
-        std::cout << "\n---" << get_curr_event_str() << "---";
+        std::cout << "\n-----" << get_curr_event_str() << "-----\n";
+        sleep(1000);
         handle_event(current_event);
         //
-        std::cout << "\nRolling random Event...";
+        std::cout << "\n\nRolling random Event...";
+        sleep(1000);
         //
         update_event();
     }
@@ -43,7 +44,7 @@ void Simulation::handle_mod_table() {
             std::cout << group_at_table_str(table)
                 << "is not ready yet complete...\nBringing awaiting client no."
                 << table.get_awaiting_ids().front() << std::endl;
-                sleep(100);
+                sleep(800);
             //
             Client awaiting_c(table.get_awaiting_ids().front());
             table.bring_to_table(awaiting_c);
@@ -53,12 +54,13 @@ void Simulation::handle_mod_table() {
             //
             std::cout << group_at_table_str(table)
                 << "has not received their orders yet\nPreparing...\n";
-                sleep(100);
+                sleep(800);
             //
             table.prepare_order();
             table.update_status();
         } else {
-            std::cout << table.interact(seed);
+            std::cout << table.interact(seed) << std::endl;
+            sleep(700);
             // Erase from memory if there's need
             if (table.get_status() == Status::Free)
                 handle_del_table();
@@ -69,7 +71,8 @@ void Simulation::handle_mod_table() {
 void Simulation::handle_nothing() {
     for (Table &table : active_tables) {
         if (static_cast<int>(table.get_status()) < 3) {
-            std::cout << table << "\nis still deciding on what to get...";
+            std::cout << table << "is still deciding on what to get...";
+            sleep(800);
             return;
         }
         //
@@ -83,9 +86,9 @@ void Simulation::handle_nothing() {
 void Simulation::handle_new_table() {
     const Table &new_table(new_tables[new_tables.size() - 1]);
     //
-    std::cout << "New Clients flood the pizzeria!\nIt's a rush!\n";
+    std::cout << "\nNew Clients flood the pizzeria!\nIt's a rush!";
     sleep(100);
-    std::cout << "Their Group no. " << new_table.get_group().get_id()
+    std::cout << "\nTheir Group no. " << new_table.get_group().get_id()
         << " has been assigned at Table no. " << new_table.get_id()
         << std::endl;
     //
@@ -179,6 +182,6 @@ Event Simulation::new_random_event() const noexcept {
 }
 
 std::string Simulation::group_at_table_str(const Table &table) const noexcept {
-    return "The group no." + std::to_string(table.get_group().get_id())
+    return "\nThe group no." + std::to_string(table.get_group().get_id())
         + "at Table no." + std::to_string(table.get_id());
 }
