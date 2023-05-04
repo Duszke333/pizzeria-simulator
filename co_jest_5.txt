@@ -1,11 +1,13 @@
-Co zrobię:
+Paweł:
 - W klasie menu unique_ptr zniknie prawdopodobnie (muszę skonsultować z Panią)
+- Więcej grzechów nie pamiętam
+- Zapisywanie stanu do pliku
+
+Piotr:
+- Symulacja
 - Losowanie liczb
 - Czytanie z pliku
-- Więcej grzechów nie pamiętam
 
 Co zostało do zrobienia:
 - Dołączenie kucharzy do programu
 - Kelnerzy
-- Symulacja
-- Zapisywanie stanu do pliku
