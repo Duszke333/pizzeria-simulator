@@ -32,7 +32,7 @@ private:
     size_t time = 0;
     unsigned seed;
     std::vector<Table> active_tables;
-    std::vector<Table> all_tables;
+    std::vector<Table> new_tables;
     Event current_event = Event::NewTable;
 
     void update_seed();
@@ -42,6 +42,7 @@ private:
     void handle_event(const Event &event);
     void handle_mod_table();
     void handle_nothing();
+    void handle_new_table();
 
     Event new_random_event() const noexcept;
     void sleep(const unsigned short& ms) const;

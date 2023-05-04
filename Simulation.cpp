@@ -24,6 +24,9 @@ void Simulation::handle_event(const Event &event) {
     case Event::Nothing:
         handle_nothing();
         break;
+    case Event::NewTable:
+        handle_new_table();
+        break;
     }
 }
 
@@ -34,6 +37,7 @@ void Simulation::handle_mod_table() {
             std::cout << group_at_table_str(table)
                 << "is not ready yet complete...\nBringing awaiting client no."
                 << table.get_awaiting_ids().front() << std::endl;
+                sleep(100);
             //
             Client awaiting_c(table.get_awaiting_ids().front());
             table.bring_to_table(awaiting_c);
@@ -43,6 +47,7 @@ void Simulation::handle_mod_table() {
             //
             std::cout << group_at_table_str(table)
                 << "has not received their orders yet\nPreparing...\n";
+                sleep(100);
             //
             table.prepare_order();
             table.update_status();
@@ -53,8 +58,25 @@ void Simulation::handle_mod_table() {
 
 void Simulation::handle_nothing() {
     for (Table &table : active_tables) {
+        //
+        std::cout << "Preparing orders...\n";
+        sleep(300);
+        //
         table.prepare_order();
     }
+}
+
+void Simulation::handle_new_table() {
+    const Table new_table = new_tables.front();
+    //
+    std::cout << "New Clients flood the pizzeria!\nIt's a rush!\n";
+    sleep(100);
+    std::cout << "Their Group no. " << new_table.get_group().get_id()
+        << "has been assigned at Table no. " << new_table.get_id()
+        << std::endl;
+    //
+    active_tables.push_back(new_table);
+    new_tables.erase(new_tables.begin());
 }
 
 void Simulation::end() const {
