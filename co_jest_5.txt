@@ -1,12 +1,12 @@
 Paweł:
-- W klasie menu unique_ptr zniknie prawdopodobnie (muszę skonsultować z Panią)
-- Więcej grzechów nie pamiętam
-- Zapisywanie stanu do pliku
+- W klasie menu unique_ptr zniknie prawdopodobnie (muszę skonsultować z Panią) - TBD, 99% tak, bo copy constructor nie działa
+- Więcej grzechów nie pamiętam - na ten moment
+- Czytanie z pliku - DONE
+- Zapisywanie stanu do pliku - TBD
 
 Piotr:
 - Symulacja
 - Losowanie liczb
-- Czytanie z pliku
 
 Co zostało do zrobienia:
 - Dołączenie kucharzy do programu
