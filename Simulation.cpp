@@ -21,6 +21,9 @@ void Simulation::handle_event(const Event &event) {
     case Event::ModTable:
         handle_mod_table();
         break;
+    case Event::Nothing:
+        handle_nothing();
+        break;
     }
 }
 
@@ -35,7 +38,8 @@ void Simulation::handle_mod_table() {
             Client awaiting_c(table.get_awaiting_ids().front());
             table.bring_to_table(awaiting_c);
             table.update_status();
-        } else if (!table.ready_for_action()) {
+        }
+        if (!table.ready_for_action()) {
             //
             std::cout << group_at_table_str(table)
                 << "has not received their orders yet\nPreparing...\n";
@@ -44,6 +48,12 @@ void Simulation::handle_mod_table() {
             table.update_status();
         } else
             table.interact(seed);
+    }
+}
+
+void Simulation::handle_nothing() {
+    for (Table &table : active_tables) {
+        table.prepare_order();
     }
 }
 

@@ -41,6 +41,8 @@ private:
 
     void handle_event(const Event &event);
     void handle_mod_table();
+    void handle_nothing();
+
     Event new_random_event() const noexcept;
     void sleep(const unsigned short& ms) const;
     void end() const;
