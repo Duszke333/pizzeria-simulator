@@ -22,7 +22,6 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <chrono>
 #include <thread>
 #include <algorithm>
 
@@ -43,7 +42,13 @@ enum class Event {
 class Simulation {
 private:
     size_t time = 0;
+    const Menu &menu;
     unsigned seed;
+
+    size_t client_index = 1ULL;
+    size_t group_index = 1ULL;
+    size_t table_index = 1ULL;
+
     // Tables in current scope
     std::vector<Table> active_tables;
     // Main Table database
@@ -54,6 +59,9 @@ private:
 
     void update_seed();
     void update_event();
+    Client generate_client();
+    Group generate_group(const unsigned &group_size);
+    Table generate_table(const TableSize &table_size);
 
     //// Handlers
     // General purpose, calls other handlers
@@ -73,10 +81,17 @@ private:
     std::string group_at_table_str(const Table &table) const noexcept;
 
 public:
-    Simulation(const size_t& time)
+    //// Constructors
+
+    // tables: [first] = amount of tables of [second] TableSize
+    Simulation(const size_t& time, const Menu &menu, std::array<std::pair<int, TableSize>, 3> tables)
         : time(time)
+        , menu(menu)
         {
             update_seed();
+            for (short i = 0; i != 3; ++i)
+                for (int j = 0; j != tables[i].first; ++j)
+                    new_tables.push_back(generate_table(tables[i].second));
         }
 
     const size_t& get_time() const {
@@ -87,6 +102,16 @@ public:
     }
     const Event& get_curr_event() {
         return this->current_event;
+    }
+
+    size_t new_client_index() {
+        return client_index++;
+    }
+    size_t new_group_index() {
+        return group_index++;
+    }
+    size_t new_table_index() {
+        return table_index++;
     }
 
     const std::string get_curr_event_str() const noexcept;

@@ -4,13 +4,13 @@
 // MUST start at NewTable, rolls after
 void Simulation::start() {
     for (; time != 0; --time) {
-        //
-        std::cout << "Rolling random Event...\n";
-        //
         sleep(200);
         //
-        std::cout << "---" << get_curr_event_str() << "---\n";
+        std::cout << "\n---" << get_curr_event_str() << "---";
         handle_event(current_event);
+        //
+        std::cout << "\nRolling random Event...";
+        //
         update_event();
     }
     end();
@@ -68,8 +68,12 @@ void Simulation::handle_mod_table() {
 
 void Simulation::handle_nothing() {
     for (Table &table : active_tables) {
+        if (static_cast<int>(table.get_status()) < 3) {
+            std::cout << table << "\nis still deciding on what to get...";
+            return;
+        }
         //
-        std::cout << "Preparing orders...\n";
+        std::cout << "\nPreparing orders...";
         sleep(300);
         //
         table.prepare_order();
@@ -77,16 +81,16 @@ void Simulation::handle_nothing() {
 }
 
 void Simulation::handle_new_table() {
-    const Table &new_table(new_tables.front());
+    const Table &new_table(new_tables[new_tables.size() - 1]);
     //
     std::cout << "New Clients flood the pizzeria!\nIt's a rush!\n";
     sleep(100);
     std::cout << "Their Group no. " << new_table.get_group().get_id()
-        << "has been assigned at Table no. " << new_table.get_id()
+        << " has been assigned at Table no. " << new_table.get_id()
         << std::endl;
     //
-    active_tables.push_back(std::move(new_table));
-    new_tables.erase(new_tables.begin());
+    active_tables.push_back(new_table);
+    new_tables.pop_back();
 }
 
 void Simulation::handle_del_table() {
@@ -137,7 +141,7 @@ void Simulation::sleep(const unsigned short& ms) const {
 }
 
 void Simulation::update_seed() {
-    seed = std::chrono::system_clock::now().time_since_epoch().count();
+    seed = RandomNumber::RandomSeed();
 }
 
 void Simulation::update_event() {
@@ -145,9 +149,28 @@ void Simulation::update_event() {
     update_seed();
 }
 
+Client Simulation::generate_client() {
+    return Client(new_client_index());
+}
+
+Group Simulation::generate_group(const unsigned &size) {
+    Group temp_group = Group(new_group_index());
+    while (temp_group.get_group_size() < size)
+        temp_group.add_client(generate_client());
+
+    return temp_group;
+}
+
+Table Simulation::generate_table(const TableSize &size) {
+    Table temp_table = Table(new_table_index(), size, menu);
+    temp_table.set_group(generate_group(static_cast<unsigned>(size)));
+
+    return temp_table;
+}
+
 Event Simulation::new_random_event() const noexcept {
     RandomNumber R100(seed, 1, 100);
-    long long r100 = R100.get_value();
+    long long r100 = R100.get();
     if (r100 <= static_cast<unsigned short>(Event::ModTable)) return Event::ModTable;
     else if (r100 <= static_cast<unsigned short>(Event::NewTable)) return Event::Nothing;
     else if (r100 <= static_cast<unsigned short>(Event::DelTable)) return Event::NewTable;
