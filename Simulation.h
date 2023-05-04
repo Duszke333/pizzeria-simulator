@@ -48,6 +48,7 @@ private:
     void handle_nothing();
     void handle_new_table();
     void handle_del_table();
+    void handle_kit_acc() const noexcept;
 
     Event new_random_event() const noexcept;
     void sleep(const unsigned short& ms) const;

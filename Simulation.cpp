@@ -30,6 +30,9 @@ void Simulation::handle_event(const Event &event) {
     case Event::DelTable:
         handle_del_table();
         break;
+    case Event::KitchenAccident:
+        handle_kit_acc();
+        break;
     }
 }
 
@@ -100,6 +103,13 @@ void Simulation::handle_del_table() {
             break;
         }
     }
+}
+
+void Simulation::handle_kit_acc() const noexcept {
+    //
+    std::cout << "Ohh no!!\nThere's been an accident in the kitchen!!\n"
+        << "Cooks can't prepare the Food!!\n";
+    //
 }
 
 void Simulation::end() const {
