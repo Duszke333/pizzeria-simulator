@@ -5,8 +5,14 @@ Paweł:
 - Zapisywanie stanu do pliku - TBD
 
 Piotr:
-- Symulacja
-- Losowanie liczb
+- Symulacja:
+    - usuwanie z początku vectora a nie z końca
+    - usuwanie stolika z vectora podczas DelTable
+    - za szybko wszystko gra
+    - poprawić spacing i readabilty
+    - wypadałoby ulepszyć losowanie Eventów
+    - program nie bierze pod uwagę niekompletnych Groups
+- Losowanie liczb - DONE
 
 Co zostało do zrobienia:
 - Dołączenie kucharzy do programu
