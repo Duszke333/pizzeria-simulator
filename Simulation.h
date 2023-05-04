@@ -32,17 +32,19 @@ class Simulation {
 private:
     size_t time = 0;
     unsigned seed;
+    // Tables in current scope
     std::vector<Table> active_tables;
+    // Main Table database
     std::vector<Table> new_tables;
     Event current_event = Event::NewTable;
 
-    // Update seed and event - Randomizers
+    //// Update seed and event - Randomizers
 
     void update_seed();
     void update_event();
 
-    // Handlers
-
+    //// Handlers
+    // General purpose, calls other handlers
     void handle_event(const Event &event);
     void handle_mod_table();
     void handle_nothing();
@@ -54,7 +56,8 @@ private:
     void sleep(const unsigned short& ms) const;
     void end() const;
 
-    // Printers
+    //// Printers
+
     std::string group_at_table_str(const Table &table) const noexcept;
 
 public:
@@ -64,9 +67,18 @@ public:
             update_seed();
         }
 
-    const size_t& get_time() const { return this->time; }
-    void set_time(const size_t& time) { this->time = time; }
+    const size_t& get_time() const {
+        return this->time;
+    }
+    void set_time(const size_t& time) {
+        this->time = time;
+    }
+    const Event& get_curr_event() {
+        return this->current_event;
+    }
+
     const std::string get_curr_event_str() const noexcept;
-    const Event& get_curr_event() { return this->current_event; }
+
+    // Get the ball rollin'
     void start();
 };
