@@ -18,7 +18,7 @@ class Table {
         Status status;
         Group group;
         Order order;
-        const Menu& menu;
+        const Menu &menu;
         void place_order(unsigned int seed); // menu powinno być polem? wtedy call z interact()
     public:
         Table(unsigned int id, TableSize the_size, const Menu& the_menu);
@@ -38,5 +38,8 @@ class Table {
         void prepare_order() noexcept;
         void update_status() noexcept;
         std::string interact(unsigned int seed);
+
         friend std::ostream& operator<<(std::ostream& os, const Table& table);
+        bool operator==(const Table &other) const;
+        void operator=(const Table &other);
 };

@@ -161,3 +161,11 @@ std::ostream& operator<<(std::ostream& out, const Table& table) {
     }
     return out;
 }
+
+bool Table::operator==(const Table &other) const {
+    return this->table_id == other.table_id;
+}
+
+void Table::operator=(const Table &other) {
+    *this = Table(other);
+}
