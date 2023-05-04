@@ -13,6 +13,6 @@ public:
     // Random number in range
     RandomNumber(const unsigned &seed, const long long &bottom, const long long &top);
     RandomNumber(const long long &bottom, const long long &top);
-    const long long &get_value() const noexcept;
+    const long long &get() const noexcept;
     static unsigned RandomSeed();
 };

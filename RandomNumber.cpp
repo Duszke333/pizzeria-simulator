@@ -7,7 +7,7 @@ RandomNumber::RandomNumber(const unsigned &seed, const long long &bot, const lon
 }
 
 RandomNumber::RandomNumber(const long long &bot, const long long &top) {
-    RandomNumber(RandomNumber::RandomSeed(), bot, top);
+    *this = RandomNumber(RandomNumber::RandomSeed(), bot, top);
 }
 
 RandomNumber::RandomNumber(const unsigned &seed) {
@@ -17,10 +17,10 @@ RandomNumber::RandomNumber(const unsigned &seed) {
 }
 
 RandomNumber::RandomNumber() {
-    RandomNumber(RandomNumber::RandomSeed());
+    *this = RandomNumber(RandomNumber::RandomSeed());
 }
 
-const long long &RandomNumber::get_value() const noexcept {
+const long long &RandomNumber::get() const noexcept {
     return this->value;
 }
 
