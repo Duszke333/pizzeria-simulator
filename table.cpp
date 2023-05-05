@@ -167,5 +167,10 @@ bool Table::operator==(const Table &other) const {
 }
 
 void Table::operator=(const Table &other) {
-    *this = Table(other);
+    this->table_id = other.table_id;
+    this->ready = other.ready;
+    this->size = other.size;
+    this->group = other.group;
+    this->order = other.order;
+    this->earned = other.earned;
 }

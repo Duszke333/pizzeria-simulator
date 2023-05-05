@@ -24,6 +24,8 @@
 #include <iostream>
 #include <thread>
 #include <algorithm>
+#include <utility>
+#include <array>
 
 // Must be ordered in this order
 // Chance of getting Event = [Event value] - [previous Event value]
