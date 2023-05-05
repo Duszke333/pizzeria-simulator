@@ -6,11 +6,11 @@ Paweł:
 
 Piotr:
 - Symulacja:
-    - usuwanie z początku vectora a nie z końca
-    - usuwanie stolika z vectora podczas DelTable
-    - za szybko wszystko gra
-    - poprawić spacing i readabilty
-    - wypadałoby ulepszyć losowanie Eventów
+    - usuwanie z początku vectora a nie z końca - DONE
+    - usuwanie stolika z vectora podczas DelTable - DONE?
+    - za szybko wszystko gra - 50%
+    - poprawić spacing i readabilty - 50%
+    - wypadałoby ulepszyć losowanie Eventów - DONE
     - program nie bierze pod uwagę niekompletnych Groups
 - Losowanie liczb - DONE
 
