@@ -84,20 +84,20 @@ void Simulation::handle_nothing() {
 }
 
 void Simulation::handle_new_table() {
-    const Table &new_table(new_tables[new_tables.size() - 1]);
+    const Table new_table = all_tables.front();
     //
     std::cout << "\nNew Clients flood the pizzeria!\nIt's a rush!";
-    sleep(100);
+    sleep(700);
     std::cout << "\nTheir Group no. " << new_table.get_group().get_id()
         << " has been assigned at Table no. " << new_table.get_id()
         << std::endl;
     //
     active_tables.push_back(new_table);
-    new_tables.pop_back();
+    all_tables.erase(all_tables.begin());
 }
 
 void Simulation::handle_del_table() {
-    for (const Table &table : active_tables) {
+    for (const Table table : active_tables) {
         if (table.get_status() == Status::Free) {
             if (table.ready_for_action()) {
                 //
@@ -171,14 +171,17 @@ Table Simulation::generate_table(const TableSize &size) {
     return temp_table;
 }
 
+bool operator<=(const long long &num, const Event &event) {
+    return num <= static_cast<long long>(event);
+}
+
 Event Simulation::new_random_event() const noexcept {
-    RandomNumber R100(seed, 1, 100);
-    long long r100 = R100.get();
-    if (r100 <= static_cast<unsigned short>(Event::ModTable)) return Event::ModTable;
-    else if (r100 <= static_cast<unsigned short>(Event::NewTable)) return Event::Nothing;
-    else if (r100 <= static_cast<unsigned short>(Event::DelTable)) return Event::NewTable;
-    else if (r100 <= static_cast<unsigned short>(Event::KitchenAccident)) return Event::DelTable;
-    else return Event::Nothing;
+    long long random_num = RandomNumber::RandRange(1, 100);
+    if (random_num <= Event::ModTable) return Event::ModTable;
+    else if (random_num <= Event::Nothing) return Event::Nothing;
+    else if (random_num <= Event::NewTable) return Event::NewTable;
+    else if (random_num <= Event::DelTable) return Event::DelTable;
+    else return Event::KitchenAccident;
 }
 
 std::string Simulation::group_at_table_str(const Table &table) const noexcept {

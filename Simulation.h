@@ -38,7 +38,8 @@
 // During KitchenAccident, basically nothing happens since
 // the kitchen can't operate and prepare food
 enum class Event {
-    ModTable = 30, Nothing = 62, NewTable = 92, DelTable = 97, KitchenAccident = 100
+    ModTable = 40, Nothing = 70, NewTable = 95, DelTable = 98, KitchenAccident = 100
+//  40%            30%           25%            3%             2%
 };
 
 class Simulation {
@@ -54,7 +55,7 @@ private:
     // Tables in current scope
     std::vector<Table> active_tables;
     // Main Table database
-    std::vector<Table> new_tables;
+    std::vector<Table> all_tables;
     Event current_event = Event::NewTable;
 
     //// Update seed and event - Randomizers
@@ -74,7 +75,6 @@ private:
     void handle_del_table();
     void handle_kit_acc() const noexcept;
 
-    Event new_random_event() const noexcept;
     void sleep(const unsigned short& ms) const;
     void end() const;
 
@@ -93,8 +93,10 @@ public:
             update_seed();
             for (short i = 0; i != 3; ++i)
                 for (int j = 0; j != tables[i].first; ++j)
-                    new_tables.push_back(generate_table(tables[i].second));
+                    all_tables.push_back(generate_table(tables[i].second));
         }
+
+    Event new_random_event() const noexcept;
 
     const size_t& get_time() const {
         return this->time;
