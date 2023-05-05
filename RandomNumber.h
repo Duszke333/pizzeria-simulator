@@ -15,4 +15,8 @@ public:
     RandomNumber(const long long &bottom, const long long &top);
     const long long &get() const noexcept;
     static unsigned RandomSeed();
+    // Inclusive at top and bottom
+    static long long RandRange(const long long &bottom, const long long &top);
+    // Inclusive at top and bottom
+    static long long RandRange(const unsigned &seed, const long long &bottom, const long long &top);
 };
