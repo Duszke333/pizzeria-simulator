@@ -26,6 +26,8 @@
 #include <algorithm>
 #include <utility>
 #include <array>
+#include <fstream>
+#include <chrono>
 
 // Must be ordered in this order
 // Chance of getting Event = [Event value] - [previous Event value]
@@ -52,6 +54,8 @@ private:
     size_t group_index = 1ULL;
     size_t table_index = 1ULL;
 
+    std::ofstream logs;
+
     // Tables in current scope
     std::vector<Table> active_tables;
     // Main Table database
@@ -73,14 +77,16 @@ private:
     void handle_nothing();
     void handle_new_table();
     void handle_del_table();
-    void handle_kit_acc() const noexcept;
+    void handle_kit_acc() noexcept;
 
     void sleep(const unsigned short& ms) const;
-    void end() const;
+    void end() noexcept;
 
     //// Printers
 
     std::string group_at_table_str(const Table &table) const noexcept;
+    
+    void communicate(std::string message) noexcept;
 
 public:
     //// Constructors
@@ -94,7 +100,16 @@ public:
             for (short i = 0; i != 3; ++i)
                 for (int j = 0; j != tables[i].first; ++j)
                     all_tables.push_back(generate_table(tables[i].second));
+            
+            const auto now = std::chrono::system_clock::now();
+            const std::time_t t_c = std::chrono::system_clock::to_time_t(now);
+            std::string file_name = std::ctime(&t_c);
+            logs.open("./logs/" + file_name + ".txt");
         }
+
+    ~Simulation() {
+        logs.close();
+    }
 
     Event new_random_event() const noexcept;
 

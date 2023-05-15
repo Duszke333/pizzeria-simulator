@@ -3,13 +3,15 @@
 // Doesn't actually roll random Event at the start,
 // MUST start at NewTable, rolls after
 void Simulation::start() {
+    size_t total_time = time;
     for (; time != 0; --time) {
         //
-        std::cout << "\n-----" << get_curr_event_str() << "-----\n";
+        communicate("Turn no. " + std::to_string(total_time - time) + "\n");
+        communicate("\n-----" + get_curr_event_str() + "-----\n");
         sleep(1000);
         handle_event(current_event);
         //
-        std::cout << "\n\nRolling random Event...";
+        communicate("\n\nRolling random Event...\n");
         sleep(1000);
         //
         update_event();
@@ -41,10 +43,12 @@ void Simulation::handle_mod_table() {
     for (Table &table : active_tables) {
         if (!table.get_group().is_complete()) {
             //
-            std::cout << group_at_table_str(table)
-                << "is not ready yet complete...\nBringing awaiting client no."
-                << table.get_awaiting_ids().front() << std::endl;
-                sleep(800);
+            communicate(
+                group_at_table_str(table)
+                + "is not ready yet complete...\nBringing awaiting client no."
+                + std::to_string(table.get_awaiting_ids().front()) + "\n"
+            );
+            sleep(800);
             //
             Client awaiting_c(table.get_awaiting_ids().front());
             table.bring_to_table(awaiting_c);
@@ -52,14 +56,16 @@ void Simulation::handle_mod_table() {
         }
         if (!table.ready_for_action()) {
             //
-            std::cout << group_at_table_str(table)
-                << "has not received their orders yet\nPreparing...\n";
+            communicate(
+                group_at_table_str(table)
+                + "has not received their orders yet\nPreparing...\n"
+            ); 
                 sleep(800);
             //
             table.prepare_order();
             table.update_status();
         } else {
-            std::cout << table.interact(seed) << std::endl;
+            communicate(table.interact(seed) + "\n");
             sleep(700);
             // Erase from memory if there's need
             if (table.get_status() == Status::Free)
@@ -71,12 +77,14 @@ void Simulation::handle_mod_table() {
 void Simulation::handle_nothing() {
     for (Table &table : active_tables) {
         if (static_cast<int>(table.get_status()) < 3) {
-            std::cout << table << "is still deciding on what to get...";
+            logs << table;
+            std::cout << table;
+            communicate("is still deciding on what to get...\n");
             sleep(800);
             return;
         }
         //
-        std::cout << "\nPreparing orders...";
+        communicate("\nPreparing orders...");
         sleep(300);
         //
         table.prepare_order();
@@ -86,23 +94,25 @@ void Simulation::handle_nothing() {
 void Simulation::handle_new_table() {
     const Table new_table = all_tables.front();
     //
-    std::cout << "\nNew Clients flood the pizzeria!\nIt's a rush!";
+    communicate("\nNew Clients flood the pizzeria!\nIt's a rush!");
     sleep(700);
-    std::cout << "\nTheir Group no. " << new_table.get_group().get_id()
-        << " has been assigned at Table no. " << new_table.get_id()
-        << std::endl;
+    communicate(
+        "\nTheir Group no. " + std::to_string(new_table.get_group().get_id())
+        + " has been assigned at Table no. " + std::to_string(new_table.get_id()) + "\n"
+    );
     //
     active_tables.push_back(new_table);
     all_tables.erase(all_tables.begin());
 }
 
 void Simulation::handle_del_table() {
-    for (const Table table : active_tables) {
+    for (const Table &table : active_tables) {
         if (table.get_status() == Status::Free) {
             if (table.ready_for_action()) {
                 //
-                std::cout << table
-                    << "\nDecided against dining in proi pizzeria and left...\n";
+                logs << table;
+                std::cout << table;
+                communicate("\nDecided against dining in proi pizzeria and left...\n");
                 //
             }
             auto it = std::find(active_tables.begin(), active_tables.end(), table);
@@ -112,15 +122,16 @@ void Simulation::handle_del_table() {
     }
 }
 
-void Simulation::handle_kit_acc() const noexcept {
+void Simulation::handle_kit_acc() noexcept {
+    // CANNOT WRITE TO FILE WHEN CONST
     //
-    std::cout << "Ohh no!!\nThere's been an accident in the kitchen!!\n"
-        << "Cooks can't prepare the Food!!\n";
+    communicate("Ohh no!!\nThere's been an accident in the kitchen!!\nCooks can't prepare the Food!!\n");
     //
 }
 
-void Simulation::end() const {
-    std::cout << "Pizzeria is closing...\n";
+void Simulation::end() noexcept {
+    // CANNOT WRITE TO FILE WHEN CONST
+    communicate("Pizzeria is closing...\n");
 }
 
 const std::string Simulation::get_curr_event_str() const noexcept {
@@ -187,4 +198,10 @@ Event Simulation::new_random_event() const noexcept {
 std::string Simulation::group_at_table_str(const Table &table) const noexcept {
     return "\nThe group no." + std::to_string(table.get_group().get_id())
         + "at Table no." + std::to_string(table.get_id());
+}
+
+
+void Simulation::communicate(std::string message) noexcept {
+    std::cout << message;
+    logs << message;
 }
