@@ -60,7 +60,14 @@ private:
     std::vector<Table> active_tables;
     // Main Table database
     std::vector<Table> all_tables;
-    Event current_event = Event::NewTable;
+
+    // To influence event randomizing
+    std::vector<Event> event_history;
+    std::vector<Event> next_events = {Event::NewTable};
+
+
+    // Starting event
+    Event current_event;
 
     //// Update seed and event - Randomizers
 
@@ -79,14 +86,14 @@ private:
     void handle_del_table();
     void handle_kit_acc() noexcept;
 
-    void sleep(const unsigned short& ms) const;
+    void sleep(unsigned short ms) const;
     void end() noexcept;
 
     //// Printers
 
     std::string group_at_table_str(const Table &table) const noexcept;
-    
-    void communicate(std::string message) noexcept;
+
+    void communicate(std::string message, unsigned short time = 1500) noexcept;
 
 public:
     //// Constructors
@@ -100,7 +107,7 @@ public:
             for (short i = 0; i != 3; ++i)
                 for (int j = 0; j != tables[i].first; ++j)
                     all_tables.push_back(generate_table(tables[i].second));
-            
+
             const auto now = std::chrono::system_clock::now();
             const std::time_t t_c = std::chrono::system_clock::to_time_t(now);
             std::string file_name = std::ctime(&t_c);
@@ -111,7 +118,7 @@ public:
         logs.close();
     }
 
-    Event new_random_event() const noexcept;
+    Event rand_event() const noexcept;
 
     const size_t& get_time() const {
         return this->time;
