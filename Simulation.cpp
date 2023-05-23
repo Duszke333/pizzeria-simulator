@@ -3,6 +3,7 @@
 // Doesn't actually roll random Event at the start,
 // MUST start at NewTable, rolls after
 void Simulation::start() {
+    communicate("Seed:" + std::to_string(seed) + "\n");
     size_t total_time = time;
     for (; time != 0; --time) {
         update_event();

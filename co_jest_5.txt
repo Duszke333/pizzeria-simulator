@@ -22,3 +22,4 @@ KONSULTACJE:
 - czy unique_ptr w Menu jest potrzebny, czy mogą być wektory
 - jeśli musi być, to jak losować jedzenie konkretnego typu
 - czy bool ready_to_serve[3]; w Order jest legalne
+- czy zadania wykonywane przez kelnera mogą być metodami stołu
