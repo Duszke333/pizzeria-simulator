@@ -15,5 +15,10 @@ Piotr:
 - Losowanie liczb - DONE
 
 Co zostało do zrobienia:
-- Dołączenie kucharzy do programu
-- Kelnerzy
+- Dołączenie kucharzy do programu - DONE
+- Kelnerzy - DONE
+
+KONSULTACJE:
+- czy unique_ptr w Menu jest potrzebny, czy mogą być wektory
+- jeśli musi być, to jak losować jedzenie konkretnego typu
+- czy bool ready_to_serve[3]; w Order jest legalne

@@ -12,7 +12,7 @@
             // "program": "${workspaceFolder}\\${workspaceFolderBasename}.exe",
             //Wersja dla Linuxa:
             "program": "${workspaceFolder}/${workspaceFolderBasename}",
-            "args": ["menu.txt", "60", "1", "2", "3"], //tu należy podać argumenty wywołania programu
+            "args": ["menu.txt", "20", "1", "2", "3"], //tu należy podać argumenty wywołania programu
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
