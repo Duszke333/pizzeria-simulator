@@ -3,6 +3,7 @@
 #include "menu.h"
 #include "food_not_found_exception.h"
 #include "no_food_exception.h"
+#include "RandomNumber.h"
 
 
 void Menu::remove_pizza(std::string the_name) {
@@ -47,19 +48,19 @@ void Menu::add_appetizer(std::string the_name, unsigned int the_price, unsigned 
 
 Drink Menu::random_drink(unsigned int seed) const {
     if (drinks.size() == 0) throw NoFoodException("Drink");
-    unsigned int pos = seed % drinks.size(); 
+    unsigned long long pos = RandomNumber(seed).get() % drinks.size();
     return drinks[pos];
 }
 
 Appetizer Menu::random_appetizer(unsigned int seed) const {
     if (appetizers.size() == 0) throw NoFoodException("Appetizer");
-    unsigned int pos = seed % appetizers.size();
+    unsigned long long pos = RandomNumber(seed).get() % appetizers.size();
     return appetizers[pos];
 }
 
 Pizza Menu::random_pizza(unsigned int seed) const {
     if (pizzas.size() == 0) throw NoFoodException("Pizza");
-    unsigned int pos = seed % pizzas.size();
+    unsigned long long pos = RandomNumber(seed).get() % pizzas.size();
     return pizzas[pos];
 }
 
