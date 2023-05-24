@@ -42,13 +42,18 @@ void Simulation::handle_mod_table() {
             //
             communicate(
                 group_at_table_str(table)
-                + "is not ready yet complete...\nBringing awaiting client no."
+                + " is not ready yet complete...\nBringing awaiting client no."
                 + std::to_string(table.get_awaiting_ids().front()) + "\n"
             );
             //
-            Client awaiting_c(table.get_awaiting_ids().front());
-            table.bring_to_table(awaiting_c);
+            Client brought_client(table.get_awaiting_ids().front());
+            table.bring_to_table(brought_client);
+            communicate(brought_client.get_id() +
+                " has joined their group no. " + table.get_group().get_id()
+            );
             table.update_status();
+            if (table.ready_for_action())
+                communicate("The group is now ready for action!\n");
         }
         if (!table.ready_for_action()) {
             //
@@ -71,6 +76,13 @@ void Simulation::handle_mod_table() {
 
 void Simulation::handle_nothing() {
     for (Table &table : active_tables) {
+        if (!table.get_group().is_complete()) {
+            Client brought_client = Client(table.get_awaiting_ids()[0]);
+            table.bring_to_table(brought_client);
+            communicate(brought_client.get_id() +
+                " has joined their group no. " + table.get_group().get_id()
+            );
+        } else
         switch (table.get_status()) {
         case Status::Free:
             communicate(group_at_table_str(table) +
@@ -208,8 +220,13 @@ Client Simulation::generate_client() {
 
 Group Simulation::generate_group(const unsigned &size) {
     Group temp_group = Group(new_group_index());
-    while (temp_group.get_group_size() < size)
+    auto missing_persons = RandomNumber::RandRange(1, size - 1);
+    while (temp_group.get_group_size() < size - missing_persons)
         temp_group.add_client(generate_client());
+
+    for (int i = 0; i != missing_persons; ++i) {
+        temp_group.add_awaiting(new_client_index());
+    }
 
     return temp_group;
 }
