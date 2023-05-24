@@ -10,7 +10,7 @@ void Simulation::start()
     {
         update_event();
         //
-        communicate("\nTurn no. " + std::to_string(total_time - time), 500);
+        communicate("\nTurn no. " + std::to_string(total_time - time), 700);
         communicate("[" + get_curr_event_str() + "]");
         //
         handle_event(current_event);
@@ -60,7 +60,7 @@ void Simulation::handle_mod_table()
                 //
                 communicate("Client no. " +
                             std::to_string(brought_client.get_id()) +
-                            " has joined their group" +
+                            " has joined the group no. " +
                             std::to_string(table.get_group().get_id()));
                 //
                 table.update_status();
@@ -98,10 +98,11 @@ void Simulation::handle_nothing()
             //
             communicate("Client no. " +
                         std::to_string(brought_client.get_id()) +
-                        " has joined their group" +
+                        " has joined the group no. " +
                         std::to_string(table.get_group().get_id()));
             //
-        } else
+        }
+        else
         switch (table.get_status()) {
         case Status::Free:
             communicate(group_at_table_str(table) +
@@ -168,12 +169,12 @@ void Simulation::handle_del_table()
     {
         if (table.get_status() == Status::Free)
         {
-            if (table.ready_for_action())
+            if (!table.ready_for_action())
             {
                 //
-                logs << table;
-                std::cout << table;
-                communicate("Decided against dining in proi pizzeria and left...");
+                communicate("Table no. " + std::to_string(table.get_id()) +
+                    " decided against dining in proi pizzeria and left..."
+                );
                 //
             }
             auto it = std::find(active_tables.begin(), active_tables.end(), table);
@@ -245,8 +246,7 @@ void Simulation::update_event()
         event_history.push_back(current_event);
         update_seed();
     }
-    else
-        update_event();
+    else update_event();
 }
 
 Client Simulation::generate_client()
@@ -262,9 +262,7 @@ Group Simulation::generate_group(const unsigned &size)
         temp_group.add_client(generate_client());
 
     for (int i = 0; i != missing_persons; ++i)
-    {
         temp_group.add_awaiting(new_client_index());
-    }
 
     return temp_group;
 }
