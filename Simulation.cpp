@@ -69,6 +69,12 @@ void Simulation::handle_mod_table()
         else
         {
             communicate(table.interact(seed));
+            if (table.get_status() == Status::WaitingForDrinks) {
+                communicate("Their order: ");
+                std::cout << table.get_order();
+                logs << table.get_order();
+            }
+                
             // Erase from memory if there's need
             if (table.get_status() == Status::Free)
                 next_events.push_back(Event::ClientsExit);
