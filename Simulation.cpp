@@ -126,17 +126,17 @@ void Simulation::handle_nothing()
                 "The kitchen is vigorously preparing orders..."
             );
             table.prepare_order();
-            if (table.get_order().ready_to_serve[0] && table.get_status() == Status::WaitingForDrinks)
+            if (table.get_order().drinks_ready() && table.get_status() == Status::WaitingForDrinks)
             {
                 communicate("Drinks are ready to be served!");
                 next_events.push_back(Event::ModTable);
             }
-            else if (table.get_order().ready_to_serve[1] && table.get_status() == Status::WaitingForAppetizers)
+            else if (table.get_order().appetizers_ready() && table.get_status() == Status::WaitingForAppetizers)
             {
                 communicate("Appetizers are ready to be served!");
                 next_events.push_back(Event::ModTable);
             }
-            else if (table.get_order().ready_to_serve[2] && table.get_status() == Status::WaitingForPizzas)
+            else if (table.get_order().pizzas_ready() && table.get_status() == Status::WaitingForPizzas)
             {
                 communicate("Pizzas are ready to be served!");
                 next_events.push_back(Event::ModTable);
