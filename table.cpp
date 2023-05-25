@@ -91,9 +91,10 @@ void Table::bring_to_table(Client client)
 
 void Table::prepare_order() noexcept
 {
-    order.prepare_drinks();
-    order.prepare_appetizers();
-    order.prepare_pizzas();
+    // order.prepare_drinks();
+    // order.prepare_appetizers();
+    // order.prepare_pizzas();
+    order.prepare_food();
 }
 
 void Table::update_status() noexcept
@@ -104,15 +105,21 @@ void Table::update_status() noexcept
         ready = (group.is_complete() ? true : false);
         break;
     case Status::WaitingForDrinks:
-        if (order.ready_to_serve[0])
+        // if (order.ready_to_serve[0])
+        //     ready = true;
+        if (order.drinks_ready())
             ready = true;
         break;
     case Status::WaitingForAppetizers:
-        if (order.ready_to_serve[1])
+        // if (order.ready_to_serve[1])
+        //     ready = true;
+        if (order.appetizers_ready())
             ready = true;
         break;
     case Status::WaitingForPizzas:
-        if (order.ready_to_serve[2])
+        // if (order.ready_to_serve[2])
+        //     ready = true;
+        if (order.pizzas_ready())
             ready = true;
         break;
     default:

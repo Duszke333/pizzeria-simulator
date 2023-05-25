@@ -4,11 +4,26 @@
 
 
 Order::Order() :
+    drinks_ready_to_serve(false),
+    appetizers_ready_to_serve(false),
+    pizzas_ready_to_serve(false),
     price(0) {
-        ready_to_serve[0] = false;
-        ready_to_serve[1] = false;
-        ready_to_serve[2] = false;
+        // ready_to_serve[0] = false;
+        // ready_to_serve[1] = false;
+        // ready_to_serve[2] = false;
     }
+
+bool Order::drinks_ready() const noexcept {
+    return drinks_ready_to_serve;
+}
+
+bool Order::appetizers_ready() const noexcept {
+    return appetizers_ready_to_serve;
+}
+
+bool Order::pizzas_ready() const noexcept {
+    return pizzas_ready_to_serve;
+}
 
 unsigned int Order::get_price() const noexcept {
     return price;
@@ -59,34 +74,60 @@ void Order::remove_appetizer(Appetizer appetizer) {
     }
 }
 
-void Order::prepare_pizzas() {
-    if (pizzas.size() == 0) throw OrderEmptyException();
-    unsigned int statuses = 0;
-    for (Pizza& pizza : pizzas) {
-        pizza.prepare();
-        if(pizza.is_ready()) statuses++;
-    }
-    if (statuses == pizzas.size()) ready_to_serve[2] = true;
-}
+// void Order::prepare_pizzas() {
+//     if (pizzas.size() == 0) throw OrderEmptyException();
+//     unsigned int statuses = 0;
+//     for (Pizza& pizza : pizzas) {
+//         pizza.prepare();
+//         if(pizza.is_ready()) statuses++;
+//     }
+//     if (statuses == pizzas.size()) ready_to_serve[2] = true;
+// }
 
-void Order::prepare_drinks() {
+// void Order::prepare_drinks() {
+//     if (drinks.size() == 0) throw OrderEmptyException();
+//     unsigned int statuses = 0;
+//     for (Drink& drink : drinks) {
+//         drink.prepare();
+//         if(drink.is_ready()) statuses++;
+//     }
+//     if (statuses == drinks.size()) ready_to_serve[0] = true;
+// }
+
+// void Order::prepare_appetizers() {
+//     if (appetizers.size() == 0) throw OrderEmptyException();
+//     unsigned int statuses = 0;
+//     for (Appetizer& appetizer : appetizers) {
+//         appetizer.prepare();
+//         if(appetizer.is_ready()) statuses++;
+//     }
+//     if (statuses == appetizers.size()) ready_to_serve[1] = true;
+// }
+
+void Order::prepare_food() {
     if (drinks.size() == 0) throw OrderEmptyException();
-    unsigned int statuses = 0;
+    unsigned int d_statuses = 0;
     for (Drink& drink : drinks) {
         drink.prepare();
-        if(drink.is_ready()) statuses++;
+        if(drink.is_ready()) d_statuses++;
     }
-    if (statuses == drinks.size()) ready_to_serve[0] = true;
-}
-
-void Order::prepare_appetizers() {
+    if (d_statuses == drinks.size()) drinks_ready_to_serve = true;
+    
     if (appetizers.size() == 0) throw OrderEmptyException();
-    unsigned int statuses = 0;
+    unsigned int a_statuses = 0;
     for (Appetizer& appetizer : appetizers) {
         appetizer.prepare();
-        if(appetizer.is_ready()) statuses++;
+        if(appetizer.is_ready()) a_statuses++;
     }
-    if (statuses == appetizers.size()) ready_to_serve[1] = true;
+    if (a_statuses == appetizers.size()) appetizers_ready_to_serve = true;
+
+    if (pizzas.size() == 0) throw OrderEmptyException();
+    unsigned int p_statuses = 0;
+    for (Pizza& pizza : pizzas) {
+        pizza.prepare();
+        if(pizza.is_ready()) p_statuses++;
+    }
+    if (p_statuses == pizzas.size()) pizzas_ready_to_serve = true;
 }
 
 void Order::clear_order() {
@@ -94,9 +135,12 @@ void Order::clear_order() {
     drinks.clear();
     appetizers.clear();
     price = 0;
-    ready_to_serve[0] = false;
-    ready_to_serve[1] = false;
-    ready_to_serve[2] = false;
+    drinks_ready_to_serve = false;
+    appetizers_ready_to_serve = false;
+    pizzas_ready_to_serve = false;
+    // ready_to_serve[0] = false;
+    // ready_to_serve[1] = false;
+    // ready_to_serve[2] = false;
 }
 
 std::ostream& operator<<(std::ostream& out, const Order& order) {
