@@ -46,21 +46,21 @@ void Menu::add_appetizer(std::string the_name, unsigned int the_price, unsigned 
     appetizers.push_back(Appetizer(the_name, the_price, prep_time));
 }
 
-Drink Menu::random_drink(unsigned int seed) const {
+Drink Menu::random_drink() const {
     if (drinks.size() == 0) throw NoFoodException("Drink");
-    unsigned long long pos = RandomNumber(seed).get() % drinks.size();
+    unsigned long long pos = RandomNumber::RandRange(0, drinks.size());
     return drinks[pos];
 }
 
-Appetizer Menu::random_appetizer(unsigned int seed) const {
+Appetizer Menu::random_appetizer() const {
     if (appetizers.size() == 0) throw NoFoodException("Appetizer");
-    unsigned long long pos = RandomNumber(seed).get() % appetizers.size();
+    unsigned long long pos = RandomNumber::RandRange(0, appetizers.size());
     return appetizers[pos];
 }
 
-Pizza Menu::random_pizza(unsigned int seed) const {
+Pizza Menu::random_pizza() const {
     if (pizzas.size() == 0) throw NoFoodException("Pizza");
-    unsigned long long pos = RandomNumber(seed).get() % pizzas.size();
+    unsigned long long pos = RandomNumber::RandRange(0, pizzas.size());
     return pizzas[pos];
 }
 

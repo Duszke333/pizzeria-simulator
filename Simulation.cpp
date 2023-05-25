@@ -68,7 +68,7 @@ void Simulation::handle_mod_table()
         }
         else
         {
-            communicate(table.interact(seed));
+            communicate(table.interact());
             // Erase from memory if there's need
             if (table.get_status() == Status::Free)
                 next_events.push_back(Event::ClientsExit);
@@ -81,13 +81,14 @@ void Simulation::handle_new_clients()
     const Table new_table = all_tables.front();
     communicate("New Clients flood the pizzeria!");
     communicate("It's a rush!", 500);
-    communicate(
-        "Their Group no. " + std::to_string(new_table.get_group().get_id()) + " has been assigned at Table no. " + std::to_string(new_table.get_id())
+    communicate("Their Group no. " +
+        std::to_string(new_table.get_group().get_id()) +
+        " has been assigned at Table no. " + std::to_string(new_table.get_id())
     );
     active_tables.push_back(new_table);
 
     // Regenerate the group
-    all_tables[0].set_group(generate_group(all_tables[0].get_group().get_group_size()));
+    all_tables[0].set_group(generate_group(all_tables[0].get_size()));
     // Push back the first element of the all_tables vector
     all_tables.push_back(all_tables[0]);
     all_tables.erase(all_tables.begin());
@@ -168,14 +169,20 @@ Client Simulation::generate_client()
     return Client(new_client_index());
 }
 
-Group Simulation::generate_group(const unsigned &size)
+Group Simulation::generate_group(const TableSize &table_size)
 {
     Group temp_group = Group(new_group_index());
-    auto missing_persons = RandomNumber::RandRange(1, size - 1);
-    while (temp_group.get_group_size() < size - missing_persons)
+    unsigned size = static_cast<int>(table_size);
+    unsigned group_size = RandomNumber::RandRange(size / 2, size);
+    unsigned missing_persons = 0;
+
+    if (group_size > 1)
+        missing_persons = RandomNumber::RandRange(1, group_size - 1);
+
+    while (temp_group.get_group_size() < group_size - missing_persons)
         temp_group.add_client(generate_client());
 
-    for (int i = 0; i != missing_persons; ++i)
+    for (unsigned i = 0; i != missing_persons; ++i)
         temp_group.add_awaiting(new_client_index());
 
     return temp_group;
@@ -184,12 +191,12 @@ Group Simulation::generate_group(const unsigned &size)
 Table Simulation::generate_table(const TableSize &size)
 {
     Table temp_table = Table(new_table_index(), size, menu);
-    temp_table.set_group(generate_group(static_cast<unsigned>(size)));
+    temp_table.set_group(generate_group(size));
 
     return temp_table;
 }
 
-bool operator<=(const long long &num, const Event &event)
+bool operator<=(long long num, const Event &event)
 {
     return num <= static_cast<long long>(event);
 }

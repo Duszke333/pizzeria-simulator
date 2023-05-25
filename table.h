@@ -19,7 +19,7 @@ class Table {
         Group group;
         Order order;
         const Menu &menu;
-        void place_order(unsigned int seed); // menu powinno być polem? wtedy call z interact()
+        void place_order(); // menu powinno być polem? wtedy call z interact()
     public:
         Table(unsigned int id, TableSize the_size, const Menu& the_menu);
         unsigned int get_id() const noexcept;
@@ -37,7 +37,7 @@ class Table {
         void bring_to_table(Client client);
         void prepare_order() noexcept;
         void update_status() noexcept;
-        std::string interact(unsigned int seed);
+        std::string interact();
 
         friend std::ostream& operator<<(std::ostream& os, const Table& table);
         bool operator==(const Table &other) const;

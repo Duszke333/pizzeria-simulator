@@ -5,18 +5,14 @@
 class RandomNumber
 {
 private:
-    long long value = 0LL;
+    static std::mt19937 engine;
 public:
-    // Random unsinged long long
-    RandomNumber(const unsigned &seed);
-    RandomNumber();
-    // Random number in range
-    RandomNumber(const unsigned &seed, const long long &bottom, const long long &top);
-    RandomNumber(const long long &bottom, const long long &top);
-    const long long &get() const noexcept;
+    // Constructor
+    RandomNumber() = default;
+
+    // Current time
     static unsigned RandomSeed();
+
     // Inclusive at top and bottom
-    static long long RandRange(const long long &bottom, const long long &top);
-    // Inclusive at top and bottom
-    static long long RandRange(const unsigned &seed, const long long &bottom, const long long &top);
+    static long long RandRange(long long bottom, long long top);
 };

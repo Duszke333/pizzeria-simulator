@@ -40,8 +40,8 @@
 // During KitchenAccident, basically nothing happens since
 // the kitchen can't operate and prepare food
 enum class Event {
-    ModTable = 50, NewClients = 95, ClientsExit = 98, KitchenAccident = 100
-//  50%            45%              3%                2%
+    ModTable = 55, NewClients = 95, ClientsExit = 98, KitchenAccident = 100
+//  55%            40%              3%                2%
 };
 
 class Simulation {
@@ -74,7 +74,7 @@ private:
     void update_seed();
     void update_event();
     Client generate_client();
-    Group generate_group(const unsigned &group_size);
+    Group generate_group(const TableSize &table_size);
     Table generate_table(const TableSize &table_size);
 
     //// Handlers

@@ -2,14 +2,15 @@
 #include "table.h"
 #include "table_not_ready_exception.h"
 #include "invalid_group_size_exception.h"
+#include "RandomNumber.h"
 
-void Table::place_order(unsigned int seed)
+void Table::place_order()
 {
-    for (unsigned int i = seed % 42069; i < group.get_group_size() + seed % 42069; i++)
+    for (unsigned i = 0; i < RandomNumber::RandRange(1, group.get_group_size()); i++)
     {
-        order.add_drink(menu.random_drink(seed + i));
-        order.add_appetizer(menu.random_appetizer(seed + i));
-        order.add_pizza(menu.random_pizza(seed + i));
+        order.add_drink(menu.random_drink());
+        order.add_appetizer(menu.random_appetizer());
+        order.add_pizza(menu.random_pizza());
     }
 }
 
@@ -127,7 +128,7 @@ void Table::update_status() noexcept
     }
 }
 
-std::string Table::interact(unsigned int seed)
+std::string Table::interact()
 {
     if (!ready)
         throw TableNotReadyException();
@@ -144,7 +145,7 @@ std::string Table::interact(unsigned int seed)
         ready = (group.is_complete() ? true : false);
         break;
     case Status::PreparingToOrder:
-        place_order(seed);
+        place_order();
         output += "The group no. " + std::to_string(group.get_id()) + " ordered and is waiting for drinks.";
         status = Status::WaitingForDrinks;
         ready = false;
