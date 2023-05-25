@@ -35,13 +35,13 @@
 //
 // During ModTable, waiters attend to their tables or missing customers join the group
 // During Nothing, we wait for food to be prepared and/or eaten
-// During NewTable, new customers flood the scene
-// During DelTable, customers exit the building
+// During NewClients, new customers flood the scene
+// During ClientsExit, customers exit the building
 // During KitchenAccident, basically nothing happens since
 // the kitchen can't operate and prepare food
 enum class Event {
-    ModTable = 40, Nothing = 70, NewTable = 95, DelTable = 98, KitchenAccident = 100
-//  40%            30%           25%            3%             2%
+    ModTable = 50, NewClients = 95, ClientsExit = 98, KitchenAccident = 100
+//  50%            45%              3%                2%
 };
 
 class Simulation {
@@ -63,7 +63,7 @@ private:
 
     // To influence event randomizing
     std::vector<Event> event_history;
-    std::vector<Event> next_events = {Event::NewTable};
+    std::vector<Event> next_events = {Event::NewClients};
 
 
     // Starting event
@@ -81,9 +81,8 @@ private:
     // General purpose, calls other handlers
     void handle_event(const Event &event);
     void handle_mod_table();
-    void handle_nothing();
-    void handle_new_table();
-    void handle_del_table();
+    void handle_new_clients();
+    void handle_clients_exit();
     void handle_kit_acc() noexcept;
 
     void sleep(unsigned short ms) const;
