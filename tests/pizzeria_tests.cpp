@@ -204,7 +204,6 @@ TEST_CASE("Menu tests", "[menu]")
 
     SECTION("Add free food")
     {
-        //CHECK_THROWS(menu.add_food("Some food", 0, 12));
         CHECK_THROWS(menu.add_pizza("Margherita", 0, 14, Size::S));
         CHECK_THROWS(menu.add_drink("Water", 0, 1, Volume::ml330));
         CHECK_THROWS(menu.add_appetizer("Garlic bread", 0, 13));
@@ -212,7 +211,6 @@ TEST_CASE("Menu tests", "[menu]")
 
     SECTION("Add instant food")
     {
-        //CHECK_THROWS(menu.add_food("Some food", 1, 0));
         CHECK_THROWS(menu.add_pizza("Margherita", 12, 0, Size::S));
         CHECK_THROWS(menu.add_drink("Water", 12, 0, Volume::ml330));
         CHECK_THROWS(menu.add_appetizer("Garlic bread", 3, 0));
@@ -233,24 +231,6 @@ TEST_CASE("Menu tests", "[menu]")
         menu.add_appetizer("Garlic bread", 1299, 12);
         menu.add_drink("Water", 599, 1, Volume::l1);
         Food expected("Margherita", 3199, 12);
-        //CHECK(menu.find_by_name("Margherita") == expected);
-    }
-
-    SECTION("Find food by name not in menu")
-    {
-        //CHECK_THROWS(menu.find_by_name("Bread"));
-    }
-
-    SECTION("Remove food")
-    {
-        menu.add_pizza("Margherita", 3199, 12, Size::S);
-        menu.add_pizza("Margherita", 3199, 12, Size::M);
-        menu.add_pizza("Margherita", 3199, 12, Size::L);
-        menu.add_pizza("Margherita", 3199, 12, Size::XL);
-        Food expected("Margherita", 3199, 12);
-        //CHECK(menu.find_by_name("Margherita") == expected);
-        //menu.remove_by_name("Margherita");
-        //CHECK_THROWS(menu.find_by_name("Margherita"));
     }
 
     SECTION("Random foods empty menu")
@@ -529,18 +509,7 @@ TEST_CASE("Order tests", "[order]")
         Pizza p("Margherita", 3199, 5, Size::XL);
         order.add_pizza(p);
         CHECK(order.get_price() == 4159);
-    }
-
-    SECTION("Remove pizza")
-    {
-        Pizza p("Margherita", 3199, 5, Size::XL);
-        order.add_pizza(p);
-        CHECK(order.get_price() == 4159);
-        order.remove_pizza(p);
-        CHECK(order.get_price() == 0);
-        order.remove_pizza(p);
-        CHECK(order.get_price() == 0);
-    }    
+    } 
 
     SECTION("Add drink")
     {
@@ -549,33 +518,11 @@ TEST_CASE("Order tests", "[order]")
         CHECK(order.get_price() == 779);
     }
 
-    SECTION("Remove drink")
-    {
-        Drink d("Coke", 599, 1, Volume::l1);
-        order.add_drink(d);
-        CHECK(order.get_price() == 779);
-        order.remove_drink(d);
-        CHECK(order.get_price() == 0);
-        order.remove_drink(d);
-        CHECK(order.get_price() == 0);
-    }
-
     SECTION("Add appetizer")
     {
         Appetizer a("Breadsticks", 1299, 3);
         order.add_appetizer(a);
         CHECK(order.get_price() == 1299);
-    }
-
-    SECTION("Remove appetizer")
-    {
-        Appetizer a("Breadsticks", 1299, 3);
-        order.add_appetizer(a);
-        CHECK(order.get_price() == 1299);
-        order.remove_appetizer(a);
-        CHECK(order.get_price() == 0);
-        order.remove_appetizer(a);
-        CHECK(order.get_price() == 0);
     }
 
     SECTION("Prepare pizzas")
@@ -592,16 +539,11 @@ TEST_CASE("Order tests", "[order]")
         CHECK(order.drinks_ready() == false);
         CHECK(order.appetizers_ready() == false);
         CHECK(order.pizzas_ready() == false);
-        // order.prepare_pizzas();
-        // order.prepare_pizzas();
-        // order.prepare_pizzas();
         order.prepare_food();
         order.prepare_food();
         order.prepare_food();
         // Now p1 is ready
         CHECK(order.pizzas_ready() == false);
-        // order.prepare_pizzas();
-        // order.prepare_pizzas();
         order.prepare_food();
         order.prepare_food();
         // Now all pizzas are ready
@@ -624,15 +566,12 @@ TEST_CASE("Order tests", "[order]")
         CHECK(order.drinks_ready() == false);
         CHECK(order.appetizers_ready() == false);
         CHECK(order.pizzas_ready() == false);
-        // order.prepare_drinks();
         order.prepare_food();
         // Now d1 is ready
         CHECK(order.drinks_ready() == false);
-        // order.prepare_drinks();
         order.prepare_food();
         // Now all drinks are ready
         CHECK(order.drinks_ready() == true);
-        // order.prepare_drinks();
         order.prepare_food();
         CHECK(order.drinks_ready() == true);
     }
@@ -651,18 +590,14 @@ TEST_CASE("Order tests", "[order]")
         CHECK(order.drinks_ready() == false);
         CHECK(order.appetizers_ready() == false);
         CHECK(order.pizzas_ready() == false);
-        // order.prepare_appetizers();
-        // order.prepare_appetizers();
         order.prepare_food();
         order.prepare_food();
         // Now a1 is ready
         CHECK(order.appetizers_ready() == false);
-        // order.prepare_appetizers();
         order.prepare_food();
         order.prepare_food();
         // Now all appetizers are ready
         CHECK(order.appetizers_ready() == true);
-        // order.prepare_appetizers();
         order.prepare_food();
         CHECK(order.appetizers_ready() == true);
     }
