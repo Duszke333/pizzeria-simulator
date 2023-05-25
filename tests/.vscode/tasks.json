@@ -40,6 +40,7 @@
                 "${workspaceFolder}/../table.cpp",
                 "${workspaceFolder}/../table_not_ready_exception.cpp",
                 "${workspaceFolder}/../invalid_group_size_exception.cpp",
+                "${workspaceFolder}/../RandomNumber.cpp",
                 "-o",
                 "${workspaceFolder}/${workspaceFolderBasename}",
                 "-Wall",

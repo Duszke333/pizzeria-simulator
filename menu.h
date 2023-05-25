@@ -10,7 +10,7 @@
 
 class Menu {
     private:
-        //std::list<std::unique_ptr<Food>> foods;
+        //std::list<std::unique_ptr<Food>> foods; usunąć
         std::vector<Pizza> pizzas;
         std::vector<Drink> drinks;
         std::vector<Appetizer> appetizers;
@@ -30,6 +30,6 @@ class Menu {
 
         unsigned int calculate_total_price() const noexcept;
         //Food find_by_name(std::string the_name);
-        //void remove_by_name(std::string the_name);
+        //void remove_by_name(std::string the_name); usunąć niepotrzebne
         friend std::ostream& operator<<(std::ostream& out, const Menu& menu);
 };
