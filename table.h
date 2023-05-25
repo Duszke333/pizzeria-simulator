@@ -19,7 +19,7 @@ class Table {
         Group group;
         Order order;
         const Menu &menu;
-        void place_order(); // menu powinno być polem? wtedy call z interact()
+        void place_order();
     public:
         Table(unsigned int id, TableSize the_size, const Menu& the_menu);
         unsigned int get_id() const noexcept;
