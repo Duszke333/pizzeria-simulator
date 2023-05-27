@@ -6,7 +6,7 @@ unsigned RandomNumber::RandomSeed() {
     return std::chrono::system_clock::now().time_since_epoch().count();
 }
 
-long long RandomNumber::RandRange(long long bot, long long top) {
-    std::uniform_int_distribution<long long> range(bot, top);
+long RandomNumber::RandRange(long bot, long top) {
+    std::uniform_int_distribution<long> range(bot, top);
     return range(engine);
 }

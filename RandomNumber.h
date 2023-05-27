@@ -14,5 +14,5 @@ public:
     static unsigned RandomSeed();
 
     // Inclusive at top and bottom
-    static long long RandRange(long long bottom, long long top);
+    static long RandRange(long bottom, long top);
 };
