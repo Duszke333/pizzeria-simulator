@@ -39,26 +39,22 @@ void Simulation::handle_mod_table()
 {
     for (Table &table : active_tables)
     {
-        if (!table.get_group().is_complete())
+        if (waiter(table).is_occupied()) {
+            communicate("Waiter no. " + std::to_string(waiter(table).get_id()) +
+                " cannot attend to Table no. " + std::to_string(table.get_id())
+            );
+            // Change the prority to this table
+            auto it = std::find(active_tables.begin(), active_tables.end(), table);
+            active_tables.erase(it);
+            active_tables.insert(active_tables.begin(), table);
+            communicate("As a result this table will be considered with higher priority!");
+            continue;
+        }
+        else if (!table.get_group().is_complete())
         {
             communicate(group_at_table_str(table) + " is not ready yet complete...");
-            // 50/50 chance the client joins right now
-            if (RandomNumber::RandRange(1, 2) == 1)
-            {
-                communicate("\nYou can see a client on the horizon!");
-                Client brought_client(table.get_awaiting_ids().front());
-                table.bring_to_table(brought_client);
-
-                communicate("Client no. " +
-                    std::to_string(brought_client.get_id()) +
-                    " has joined the group no. " +
-                    std::to_string(table.get_group().get_id())
-                );
-
-                table.update_status();
-                if (table.get_group().is_complete())
-                    communicate("The group is now ready for action!\n");
-            }
+            // Chanced based event that some clients show up and join the table
+            clients_showup(table);
         }
         else if (!table.ready_for_action())
         {
@@ -69,6 +65,7 @@ void Simulation::handle_mod_table()
         else
         {
             communicate(table.interact());
+            waiter(table).occupy();
             if (table.get_status() == Status::WaitingForDrinks) {
                 communicate("Their order: ");
                 std::cout << table.get_order();
@@ -80,6 +77,10 @@ void Simulation::handle_mod_table()
                 next_events.push_back(Event::ClientsExit);
         }
     }
+
+    // Unoccupy the waiters
+    for (Waiter &w : waiters)
+        w.unoccupy();
 }
 
 void Simulation::handle_new_clients()
@@ -91,8 +92,15 @@ void Simulation::handle_new_clients()
         std::to_string(new_table.get_group().get_id()) +
         " has been assigned at Table no. " + std::to_string(new_table.get_id())
     );
+    // Activate the table
     active_tables.push_back(new_table);
+    // Assign it to a waiter
+    communicate("The table has been assigned to Waiter no. "
+        + std::to_string(best_waiter().get_id())
+    );
+    best_waiter().add_table(new_table.get_id());
 
+    /// Disable the table from all tables
     // Regenerate the group
     all_tables[0].set_group(generate_group(all_tables[0].get_size()));
     // Push back the first element of the all_tables vector
@@ -170,9 +178,55 @@ void Simulation::update_event()
     else current_event = rand_event();
 }
 
+bool comp_waiters(const Waiter &first, const Waiter &second) {
+    return first.get_table_count() < second.get_table_count();
+}
+
+Waiter& Simulation::best_waiter() {
+    return *std::min_element(waiters.begin(), waiters.end(), comp_waiters);
+}
+
+Waiter& Simulation::waiter(const Table &table) {
+    for (Waiter &w : waiters)
+        if (w.has_table(table.get_id()))
+            return w;
+
+    return best_waiter();
+}
+
+Waiter Simulation::generate_waiter()
+{
+    return Waiter(new_staff_index());
+}
+
 Client Simulation::generate_client()
 {
     return Client(new_client_index());
+}
+
+long Simulation::clients_showup(Table &table) {
+    long iters = RandomNumber::RandRange(0, table.get_awaiting_ids().size());
+    if (iters == 1)
+        communicate("\nYou can see a client on the horizon!");
+    else if (iters > 1)
+        communicate("\nYou can see multiple clients on the horizon!!");
+
+    for (long i = 0; i != iters; ++i)
+    {
+        Client brought_client(table.get_awaiting_ids().front());
+        table.bring_to_table(brought_client);
+
+        communicate("Client no. " +
+            std::to_string(brought_client.get_id()) +
+            " has joined the group no. " +
+            std::to_string(table.get_group().get_id())
+        );
+
+        table.update_status();
+        if (table.get_group().is_complete())
+            communicate("The group is now ready for action!\n");
+    }
+    return iters;
 }
 
 Group Simulation::generate_group(const TableSize &table_size)

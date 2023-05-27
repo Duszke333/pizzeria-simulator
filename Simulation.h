@@ -19,6 +19,7 @@
 #include "table_not_ready_exception.h"
 #include "table.h"
 #include "RandomNumber.h"
+#include "waiter.h"
 #include <vector>
 #include <string>
 #include <iostream>
@@ -53,6 +54,7 @@ private:
     size_t client_index = 1ULL;
     size_t group_index = 1ULL;
     size_t table_index = 1ULL;
+    size_t staff_index = 1ULL;
 
     std::ofstream logs;
 
@@ -60,6 +62,15 @@ private:
     std::vector<Table> active_tables;
     // Main Table database
     std::vector<Table> all_tables;
+    // Add random amount of client to a table, returns amount of clients added
+    long clients_showup(Table &table);
+
+    // Waiters
+    std::vector<Waiter> waiters;
+    // Get a waiter with the least amount of tables
+    Waiter& best_waiter();
+    // Get that table waiter
+    Waiter& waiter(const Table &table);
 
     // To influence event randomizing
     std::vector<Event> event_history;
@@ -73,6 +84,7 @@ private:
 
     void update_seed();
     void update_event();
+    Waiter generate_waiter();
     Client generate_client();
     Group generate_group(const TableSize &table_size);
     Table generate_table(const TableSize &table_size);
@@ -98,7 +110,7 @@ public:
     //// Constructors
 
     // tables: [first] = amount of tables of [second] TableSize
-    Simulation(const size_t& time, const Menu &menu, std::array<std::pair<int, TableSize>, 3> tables)
+    Simulation(const size_t& time, const Menu &menu, std::array<std::pair<int, TableSize>, 3> tables, short waiters)
         : time(time)
         , menu(menu)
         {
@@ -106,6 +118,9 @@ public:
             for (short i = 0; i != 3; ++i)
                 for (int j = 0; j != tables[i].first; ++j)
                     all_tables.push_back(generate_table(tables[i].second));
+
+            for (short i = 0; i != waiters; ++i)
+                this->waiters.push_back(generate_waiter());
 
             const auto now = std::chrono::system_clock::now();
             const std::time_t t_c = std::chrono::system_clock::to_time_t(now);
@@ -129,6 +144,9 @@ public:
         return this->current_event;
     }
 
+    size_t new_staff_index() {
+        return staff_index++;
+    }
     size_t new_client_index() {
         return client_index++;
     }
