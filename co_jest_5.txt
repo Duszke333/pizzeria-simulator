@@ -7,18 +7,18 @@ Paweł:
 Piotr:
 - Symulacja:
     - usuwanie z początku vectora a nie z końca - DONE
-    - usuwanie stolika z vectora podczas DelTable - DONE?
-    - za szybko wszystko gra - 50%
-    - poprawić spacing i readabilty - 50%
+    - usuwanie stolika z vectora podczas DelTable - DONE
+    - za szybko wszystko gra - DONE?
+    - poprawić spacing i readabilty - 99%
     - wypadałoby ulepszyć losowanie Eventów - DONE
-    - program nie bierze pod uwagę niekompletnych Groups
+    - program nie bierze pod uwagę niekompletnych Groups DONE
 - Losowanie liczb - DONE
 
 Co zostało do zrobienia:
 - Dołączenie kucharzy do programu - DONE
 - Kelnerzy - DONE
 
-KONSULTACJE:
+KONSULTACJE: DONE?
 - czy unique_ptr w Menu jest potrzebny, czy mogą być wektory
 - jeśli musi być, to jak losować jedzenie konkretnego typu
 - czy bool ready_to_serve[3]; w Order jest legalne
