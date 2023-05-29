@@ -7,17 +7,14 @@
 
 
 void Menu::add_pizza(std::string the_name, unsigned int the_price, unsigned short prep_time, Size the_size) {
-    std::unique_ptr<Pizza> added_pizza = std::make_unique<Pizza>(the_name, the_price, prep_time, the_size);
     pizzas.push_back(Pizza(the_name, the_price, prep_time, the_size));
 }
 
 void Menu::add_drink(std::string the_name, unsigned int the_price, unsigned short prep_time, Volume the_vol) {
-    std::unique_ptr<Drink> added_drink = std::make_unique<Drink>(the_name, the_price, prep_time, the_vol);
     drinks.push_back(Drink(the_name, the_price, prep_time, the_vol));
 }
 
 void Menu::add_appetizer(std::string the_name, unsigned int the_price, unsigned short prep_time) {
-    std::unique_ptr<Appetizer> added_appetizer = std::make_unique<Appetizer>(the_name, the_price, prep_time);
     appetizers.push_back(Appetizer(the_name, the_price, prep_time));
 }
 

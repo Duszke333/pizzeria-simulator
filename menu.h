@@ -2,18 +2,12 @@
 #include <list>
 #include <memory>
 #include <vector>
-#include "food.h"
-#include "pizza.h"
-#include "drink.h"
-#include "appetizer.h"
+#include "food_list.h"
 
 
-class Menu {
-    private:
-        std::vector<Pizza> pizzas;
-        std::vector<Drink> drinks;
-        std::vector<Appetizer> appetizers;
+class Menu : public FoodList {
     public:
+        Menu() = default;
         void add_pizza(std::string the_name, unsigned int the_price, unsigned short prep_time, Size the_size);
         void add_drink(std::string the_name, unsigned int the_price, unsigned short prep_time, Volume the_vol);
         void add_appetizer(std::string the_name, unsigned int the_price, unsigned short prep_time);

@@ -6,7 +6,7 @@
 
 void Table::place_order()
 {
-    for (unsigned i = 0; i < RandomNumber::RandRange(1, group.get_group_size()); i++)
+    for (unsigned i = 0; i < group.get_group_size(); i++)
     {
         order.add_drink(menu.random_drink());
         order.add_appetizer(menu.random_appetizer());
@@ -115,7 +115,7 @@ void Table::update_status() noexcept
             ready = true;
         break;
     default:
-        break;
+        return;
     }
 }
 

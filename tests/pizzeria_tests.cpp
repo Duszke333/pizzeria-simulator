@@ -5,6 +5,7 @@
 #include "../pizza.h"
 #include "../drink.h"
 #include "../appetizer.h"
+#include "../food_list.h"
 #include "../menu.h"
 #include "../food_not_found_exception.h"
 #include "../no_food_exception.h"
@@ -235,9 +236,9 @@ TEST_CASE("Menu tests", "[menu]")
 
     SECTION("Random foods empty menu")
     {
-        CHECK_THROWS(menu.random_drink(1));
-        CHECK_THROWS(menu.random_appetizer(2));
-        CHECK_THROWS(menu.random_pizza(3));
+        CHECK_THROWS(menu.random_drink());
+        CHECK_THROWS(menu.random_appetizer());
+        CHECK_THROWS(menu.random_pizza());
     }
 }
 
@@ -741,50 +742,50 @@ TEST_CASE("Table tests", "[table]")
         CHECK(table.ready_for_action() == true);
         CHECK(table.get_status() == Status::Free);
         table.set_group(group);
-        table.interact(1);
+        table.interact();
         // Recieving menu
         CHECK(table.ready_for_action() == true);
         CHECK(table.get_status() == Status::WaitingForMenu);
-        table.interact(2);
+        table.interact();
         // Ordering
         CHECK(table.ready_for_action() == false);
         CHECK(table.get_status() == Status::PreparingToOrder);
-        CHECK_THROWS(table.interact(3)); // Won't order as group is incomplete
+        CHECK_THROWS(table.interact()); // Won't order as group is incomplete
         table.update_status();
         CHECK(table.ready_for_action() == false); // Still not ready as group is incomplete
         table.bring_to_table(Client(3));
         table.bring_to_table(Client(4));
         table.update_status();
         CHECK(table.ready_for_action() == true); // Ready as group is complete
-        table.interact(3);
+        table.interact();
         CHECK(table.get_order().get_price() != 0);
 
         // Getting drinks
         CHECK(table.ready_for_action() == false);
         CHECK(table.get_status() == Status::WaitingForDrinks);
-        CHECK_THROWS(table.interact(4)); // Won't get drinks as they're not ready
+        CHECK_THROWS(table.interact()); // Won't get drinks as they're not ready
         table.update_status();
         CHECK(table.ready_for_action() == false); // Still not ready as drinks are not ready
         table.prepare_order();
         table.prepare_order(); // times are now: Drinks - 0, Appetizers - 2, Pizzas - 5
         table.update_status();
         CHECK(table.ready_for_action() == true); // Ready as drinks are now ready
-        table.interact(4);
+        table.interact();
         // Getting appetizers
         CHECK(table.ready_for_action() == false);
         CHECK(table.get_status() == Status::WaitingForAppetizers);
-        CHECK_THROWS(table.interact(5)); // Won't get appetizers as they're not ready
+        CHECK_THROWS(table.interact()); // Won't get appetizers as they're not ready
         table.update_status();
         CHECK(table.ready_for_action() == false); // Still not ready as appetizers are not ready
         table.prepare_order();
         table.prepare_order(); // times are now: Drinks - 0, Appetizers - 0, Pizzas - 4
         table.update_status();
         CHECK(table.ready_for_action() == true); // Ready as appetizers are now ready
-        table.interact(5);
+        table.interact();
         // Getting pizzas
         CHECK(table.ready_for_action() == false);
         CHECK(table.get_status() == Status::WaitingForPizzas);
-        CHECK_THROWS(table.interact(6)); // Won't get pizzas as they're not ready
+        CHECK_THROWS(table.interact()); // Won't get pizzas as they're not ready
         table.update_status();
         CHECK(table.ready_for_action() == false); // Still not ready as pizzas are not ready
         table.prepare_order();
@@ -793,15 +794,15 @@ TEST_CASE("Table tests", "[table]")
         table.prepare_order(); // times are now: Drinks - 0, Appetizers - 0, Pizzas - 0
         table.update_status();
         CHECK(table.ready_for_action() == true); // Ready as pizzas are now ready
-        table.interact(6);
+        table.interact();
         // Getting receipt
         CHECK(table.ready_for_action() == true);
         CHECK(table.get_status() == Status::WaitingForReceipt);
-        table.interact(7);
+        table.interact();
         // Paying
         CHECK(table.ready_for_action() == true);
         CHECK(table.get_status() == Status::ReadyToPay);
-        table.interact(8);
+        table.interact();
         // Leaving
         CHECK(table.get_earnings() != 0);
         CHECK(table.get_group().get_group_size() == 0);

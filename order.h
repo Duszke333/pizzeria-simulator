@@ -1,20 +1,15 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include "pizza.h"
-#include "drink.h"
-#include "appetizer.h"
+#include "food_list.h"
 
 
-class Order {
+class Order : public FoodList {
     private:
         bool drinks_ready_to_serve;
         bool appetizers_ready_to_serve;
         bool pizzas_ready_to_serve;
         unsigned int price;
-        std::vector<Pizza> pizzas;
-        std::vector<Drink> drinks;
-        std::vector<Appetizer> appetizers;
     public:
         Order();
         bool drinks_ready() const noexcept;
