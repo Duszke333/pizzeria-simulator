@@ -540,16 +540,16 @@ TEST_CASE("Order tests", "[order]")
         CHECK(order.drinks_ready() == false);
         CHECK(order.appetizers_ready() == false);
         CHECK(order.pizzas_ready() == false);
-        order.prepare_food();
-        order.prepare_food();
-        order.prepare_food();
+        order.prepare_food(0);
+        order.prepare_food(0);
+        order.prepare_food(0);
         // Now p1 is ready
         CHECK(order.pizzas_ready() == false);
-        order.prepare_food();
-        order.prepare_food();
+        order.prepare_food(0);
+        order.prepare_food(0);
         // Now all pizzas are ready
         CHECK(order.pizzas_ready() == true);
-        order.prepare_food();
+        order.prepare_food(0);
         CHECK(order.pizzas_ready() == true);
     }
 
@@ -567,13 +567,13 @@ TEST_CASE("Order tests", "[order]")
         CHECK(order.drinks_ready() == false);
         CHECK(order.appetizers_ready() == false);
         CHECK(order.pizzas_ready() == false);
-        order.prepare_food();
+        order.prepare_food(0);
         // Now d1 is ready
         CHECK(order.drinks_ready() == false);
-        order.prepare_food();
+        order.prepare_food(0);
         // Now all drinks are ready
         CHECK(order.drinks_ready() == true);
-        order.prepare_food();
+        order.prepare_food(0);
         CHECK(order.drinks_ready() == true);
     }
 
@@ -591,22 +591,22 @@ TEST_CASE("Order tests", "[order]")
         CHECK(order.drinks_ready() == false);
         CHECK(order.appetizers_ready() == false);
         CHECK(order.pizzas_ready() == false);
-        order.prepare_food();
-        order.prepare_food();
+        order.prepare_food(0);
+        order.prepare_food(0);
         // Now a1 is ready
         CHECK(order.appetizers_ready() == false);
-        order.prepare_food();
-        order.prepare_food();
+        order.prepare_food(0);
+        order.prepare_food(0);
         // Now all appetizers are ready
         CHECK(order.appetizers_ready() == true);
-        order.prepare_food();
+        order.prepare_food(0);
         CHECK(order.appetizers_ready() == true);
     }
 
     SECTION("Prepare empty order")
     {
         CHECK(order.get_price() == 0);
-        CHECK_THROWS(order.prepare_food());
+        CHECK_THROWS(order.prepare_food(0));
     }
 
     SECTION("Order clearing")
@@ -625,7 +625,7 @@ TEST_CASE("Order tests", "[order]")
         order.add_appetizer(a2);
         CHECK(order.get_price() == 9194);
         for (short i = 0; i < 5; i++) {
-            order.prepare_food();
+            order.prepare_food(0);
         }
         CHECK(order.drinks_ready() == true);
         CHECK(order.appetizers_ready() == true);

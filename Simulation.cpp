@@ -47,6 +47,7 @@ void Simulation::handle_mod_table()
             );
             // Change the prority to this table
             communicate("As a result this table will be considered with higher priority!");
+            tables_to_move.insert(tables_to_move.begin(), table);
             continue;
         }
         else if (!table.get_group().is_complete())
