@@ -5,8 +5,8 @@
 
 
 Food::Food(std::string the_name, unsigned int the_price, unsigned short prep_time) :
-    name(the_name),
-    ready(false) {
+    ready(false),
+    name(the_name) {
     if (the_price == 0) throw FreeFoodException();
     base_price = the_price;
     if (prep_time == 0) throw InstantFoodException();

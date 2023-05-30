@@ -4,5 +4,5 @@
 
 class OrderEmptyException : public std::logic_error {
     public:
-        OrderEmptyException();
+        OrderEmptyException(unsigned int t_id);
 };

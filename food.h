@@ -4,10 +4,10 @@
 
 class Food {
     protected:
-        std::string name;
         unsigned int base_price;
         unsigned short preparation_time;
         bool ready;
+        std::string name;
     public:
         Food(std::string the_name, unsigned int the_price, unsigned short prep_time);
         virtual ~Food();

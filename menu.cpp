@@ -20,19 +20,19 @@ void Menu::add_appetizer(std::string the_name, unsigned int the_price, unsigned 
 
 Drink Menu::random_drink() const {
     if (drinks.size() == 0) throw NoFoodException("Drink");
-    unsigned long long pos = RandomNumber::RandRange(0, drinks.size());
+    unsigned long long pos = RandomNumber::RandRange(0, drinks.size() - 1);
     return drinks[pos];
 }
 
 Appetizer Menu::random_appetizer() const {
     if (appetizers.size() == 0) throw NoFoodException("Appetizer");
-    unsigned long long pos = RandomNumber::RandRange(0, appetizers.size());
+    unsigned long long pos = RandomNumber::RandRange(0, appetizers.size() - 1);
     return appetizers[pos];
 }
 
 Pizza Menu::random_pizza() const {
     if (pizzas.size() == 0) throw NoFoodException("Pizza");
-    unsigned long long pos = RandomNumber::RandRange(0, pizzas.size());
+    unsigned long long pos = RandomNumber::RandRange(0, pizzas.size() - 1);
     return pizzas[pos];
 }
 

@@ -1,6 +1,6 @@
 DRINK,Coffee,799
 DRINK,Coca Cola,599
-DRINK,ŻUBR,699
+DRINK,Tea,699
 APPETIZER,Breadsticks,999,2
 APPETIZER,Garlic bread,1299,3
 APPETIZER,Scallops,1599,4

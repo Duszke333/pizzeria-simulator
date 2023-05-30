@@ -6,6 +6,7 @@
 
 void Table::place_order()
 {
+    std::cout << "Table " << table_id << " placing order..." << std::endl;
     for (unsigned i = 0; i < group.get_group_size(); i++)
     {
         order.add_drink(menu.random_drink());
@@ -92,7 +93,7 @@ void Table::bring_to_table(Client client)
 
 void Table::prepare_order() noexcept
 {
-    order.prepare_food();
+    order.prepare_food(table_id);
 }
 
 void Table::update_status() noexcept
@@ -164,6 +165,7 @@ std::string Table::interact()
         output += "The group no. " + std::to_string(group.get_id()) + " paid and left the restaurant.";
         status = Status::Free;
         group = Group();
+        std::cout << "Table " << this->get_id() << ": ";
         order.clear_order();
         return output;
     }

@@ -112,7 +112,7 @@ void Simulation::handle_clients_exit()
 {
     for (const Table &table : active_tables)
     {
-        if (table.get_status() == Status::Free)
+        if (table.get_status() == Status::WaitingForMenu)
         {
             communicate("Group no. " + std::to_string(table.get_group().get_id()) +
                 " decided against dining in proi pizzeria and left leaving Table no. " +
@@ -150,7 +150,7 @@ const std::string Simulation::get_curr_event_str() const noexcept
     case Event::KitchenAccident:
         return "KitchenAccident";
     }
-    return "ModTable";
+    return "Diff";
 }
 
 void Simulation::sleep(unsigned short ms) const
@@ -284,5 +284,5 @@ void Simulation::communicate(std::string message, unsigned short time) noexcept
 {
     std::cout << message << std::endl;
     logs << message;
-    sleep(time);
+    //sleep(time);
 }

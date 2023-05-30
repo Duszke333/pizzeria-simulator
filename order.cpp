@@ -41,8 +41,8 @@ void Order::add_appetizer(Appetizer appetizer) {
     price += appetizer.get_price();
 }
 
-void Order::prepare_food() {
-    if (drinks.size() == 0) throw OrderEmptyException();
+void Order::prepare_food(unsigned int t_id) {
+    if (drinks.size() == 0) throw OrderEmptyException(t_id);
     unsigned int d_statuses = 0;
     for (Drink& drink : drinks) {
         drink.prepare();
@@ -50,7 +50,7 @@ void Order::prepare_food() {
     }
     if (d_statuses == drinks.size()) drinks_ready_to_serve = true;
     
-    if (appetizers.size() == 0) throw OrderEmptyException();
+    if (appetizers.size() == 0) throw OrderEmptyException(t_id);
     unsigned int a_statuses = 0;
     for (Appetizer& appetizer : appetizers) {
         appetizer.prepare();
@@ -58,7 +58,7 @@ void Order::prepare_food() {
     }
     if (a_statuses == appetizers.size()) appetizers_ready_to_serve = true;
 
-    if (pizzas.size() == 0) throw OrderEmptyException();
+    if (pizzas.size() == 0) throw OrderEmptyException(t_id);
     unsigned int p_statuses = 0;
     for (Pizza& pizza : pizzas) {
         pizza.prepare();
@@ -68,6 +68,7 @@ void Order::prepare_food() {
 }
 
 void Order::clear_order() {
+    std::cout << "Order clearing..." << std::endl;
     pizzas.clear();
     drinks.clear();
     appetizers.clear();

@@ -19,7 +19,7 @@ class Order : public FoodList {
         void add_pizza(Pizza pizza);
         void add_drink(Drink drink);
         void add_appetizer(Appetizer appetizer);
-        void prepare_food();
+        void prepare_food(unsigned int t_id);
         void clear_order();
         friend std::ostream& operator<<(std::ostream& os, const Order& order);
 };
