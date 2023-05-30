@@ -49,7 +49,11 @@ int main(int argc, char* argv[])
         return 3;
     }
     catch (const std::invalid_argument &e) {
-        std::cerr << "Invalid argument no. " << e.what() << std::endl;
+        std::cerr << "Invalid argument no. " << e.what() << " value." << std::endl;
         return 4;
+    }
+    catch (const std::exception &e) {
+        std::cerr << "Unexpected error: " << e.what() << std::endl; // nie powinien się pojawić
+        return 5;
     }
 }
