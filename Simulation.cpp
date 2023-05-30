@@ -37,7 +37,8 @@ void Simulation::handle_event(const Event &event)
 
 void Simulation::handle_mod_table()
 {
-    for (Table &table : active_tables)
+    auto tb_cp = active_tables;
+    for (Table &table : tb_cp)
     {
         if (waiter(table).is_occupied()) {
             communicate("Waiter no. " + std::to_string(waiter(table).get_id()) +
@@ -73,8 +74,10 @@ void Simulation::handle_mod_table()
             }
 
             // Erase from memory if there's need
-            if (table.get_status() == Status::Free)
-                next_events.push_back(Event::ClientsExit);
+            if (table.get_status() == Status::Free) {
+                auto itt = std::find(active_tables.begin(), active_tables.end(), table);
+                active_tables.erase(itt);
+            }
         }
     }
 

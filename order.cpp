@@ -68,7 +68,6 @@ void Order::prepare_food(unsigned int t_id) {
 }
 
 void Order::clear_order() {
-    std::cout << "Order clearing..." << std::endl;
     pizzas.clear();
     drinks.clear();
     appetizers.clear();
