@@ -37,17 +37,15 @@ void Simulation::handle_event(const Event &event)
 
 void Simulation::handle_mod_table()
 {
-    auto tb_cp = active_tables;
-    for (Table &table : tb_cp)
+    std::vector<Table> tables_to_move;
+    std::vector<Table> tables_to_remove;
+    for (Table &table : active_tables)
     {
         if (waiter(table).is_occupied()) {
             communicate("Waiter no. " + std::to_string(waiter(table).get_id()) +
                 " cannot attend to Table no. " + std::to_string(table.get_id())
             );
             // Change the prority to this table
-            auto it = std::find(active_tables.begin(), active_tables.end(), table);
-            active_tables.erase(it);
-            active_tables.insert(active_tables.begin(), table);
             communicate("As a result this table will be considered with higher priority!");
             continue;
         }
@@ -75,10 +73,29 @@ void Simulation::handle_mod_table()
 
             // Erase from memory if there's need
             if (table.get_status() == Status::Free) {
-                auto itt = std::find(active_tables.begin(), active_tables.end(), table);
-                active_tables.erase(itt);
+                tables_to_remove.push_back(table);
             }
         }
+    }
+
+    if (tables_to_remove.size() > 0) {
+        for (Table &table : tables_to_remove)
+        {
+            total_earned += table.get_earnings();
+            auto itt = std::find(active_tables.begin(), active_tables.end(), table);
+            active_tables.erase(itt);
+        }
+        tables_to_remove.clear();
+    }
+
+    if (tables_to_move.size() > 0) {
+        for (Table &table : tables_to_move)
+        {
+            auto it = std::find(active_tables.begin(), active_tables.end(), table);
+            active_tables.erase(it);
+            active_tables.insert(active_tables.begin(), table);
+        }
+        tables_to_move.clear();
     }
 
     // Unoccupy the waiters
@@ -88,7 +105,7 @@ void Simulation::handle_mod_table()
 
 void Simulation::handle_new_clients()
 {
-    const Table new_table = all_tables.front();
+    Table new_table = all_tables.front();
     communicate("New Clients flood the pizzeria!");
     communicate("It's a rush!", 500);
     communicate("Their Group no. " +
@@ -101,7 +118,13 @@ void Simulation::handle_new_clients()
     communicate("The table has been assigned to Waiter no. "
         + std::to_string(best_waiter().get_id())
     );
-    best_waiter().add_table(new_table.get_id());
+    
+    bool found = false;
+    for (Waiter &w : waiters)
+        if (w.has_table(new_table.get_id()))
+        found = true;
+    
+    if (!found) waiter(new_table).add_table(new_table.get_id());
 
     /// Disable the table from all tables
     // Regenerate the group
@@ -138,6 +161,7 @@ void Simulation::end() noexcept
 {
     // CANNOT WRITE TO FILE WHEN CONST
     communicate("Pizzeria is closing...");
+    communicate("Total earnings: " + std::to_string(total_earned / 100) + "." + std::to_string(total_earned % 100));
 }
 
 const std::string Simulation::get_curr_event_str() const noexcept
@@ -287,5 +311,5 @@ void Simulation::communicate(std::string message, unsigned short time) noexcept
 {
     std::cout << message << std::endl;
     logs << message;
-    //sleep(time);
+    sleep(time);
 }

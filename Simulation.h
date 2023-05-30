@@ -55,6 +55,7 @@ private:
     size_t group_index = 1ULL;
     size_t table_index = 1ULL;
     size_t staff_index = 1ULL;
+    size_t total_earned = 0ULL;
 
     std::ofstream logs;
 
