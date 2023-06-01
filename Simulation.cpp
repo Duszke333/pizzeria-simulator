@@ -48,7 +48,6 @@ void Simulation::handle_mod_table()
             // Change the prority to this table
             communicate("As a result this table will be considered with higher priority!");
             tables_to_move.insert(tables_to_move.begin(), table);
-            continue;
         }
         else if (!table.get_group().is_complete())
         {
@@ -85,6 +84,7 @@ void Simulation::handle_mod_table()
             total_earned += table.get_earnings();
             auto itt = std::find(active_tables.begin(), active_tables.end(), table);
             active_tables.erase(itt);
+            waiter(table).remove_table(table.get_id());
         }
         tables_to_remove.clear();
     }
@@ -119,17 +119,11 @@ void Simulation::handle_new_clients()
     communicate("The table has been assigned to Waiter no. "
         + std::to_string(best_waiter().get_id())
     );
-    
-    bool found = false;
-    for (Waiter &w : waiters)
-        if (w.has_table(new_table.get_id()))
-        found = true;
-    
-    if (!found) waiter(new_table).add_table(new_table.get_id());
+    best_waiter().add_table(new_table.get_id());
 
     /// Disable the table from all tables
     // Regenerate the group
-    all_tables[0].set_group(generate_group(all_tables[0].get_size()));
+    all_tables[0] = generate_table(all_tables[0].get_size());
     // Push back the first element of the all_tables vector
     all_tables.push_back(all_tables[0]);
     all_tables.erase(all_tables.begin());
@@ -137,7 +131,7 @@ void Simulation::handle_new_clients()
 
 void Simulation::handle_clients_exit()
 {
-    for (const Table &table : active_tables)
+    for (Table table : active_tables)
     {
         if (table.get_status() == Status::WaitingForMenu)
         {
@@ -147,6 +141,7 @@ void Simulation::handle_clients_exit()
             );
             auto it = std::find(active_tables.begin(), active_tables.end(), table);
             active_tables.erase(it);
+            waiter(table).remove_table(table.get_id());
             break;
         }
     }
@@ -221,7 +216,6 @@ Waiter& Simulation::waiter(const Table &table) {
 
     return best_waiter();
 }
-
 Waiter Simulation::generate_waiter()
 {
     return Waiter(new_staff_index());
@@ -312,5 +306,5 @@ void Simulation::communicate(std::string message, unsigned short time) noexcept
 {
     std::cout << message << std::endl;
     logs << message;
-    sleep(time);
+    // sleep(time);
 }
