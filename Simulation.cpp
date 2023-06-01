@@ -123,7 +123,9 @@ void Simulation::handle_new_clients()
 
     /// Disable the table from all tables
     // Regenerate the group
+    unsigned int id = new_table.get_id();
     all_tables[0] = generate_table(all_tables[0].get_size());
+    all_tables[0].set_id(id);
     // Push back the first element of the all_tables vector
     all_tables.push_back(all_tables[0]);
     all_tables.erase(all_tables.begin());
