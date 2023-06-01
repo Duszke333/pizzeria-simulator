@@ -35,7 +35,6 @@
 // Must cap at 100 and start at 0
 //
 // During ModTable, waiters attend to their tables or missing customers join the group
-// During Nothing, we wait for food to be prepared and/or eaten
 // During NewClients, new customers flood the scene
 // During ClientsExit, customers exit the building
 // During KitchenAccident, basically nothing happens since

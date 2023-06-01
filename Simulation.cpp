@@ -119,12 +119,12 @@ void Simulation::handle_new_clients()
     communicate("The table has been assigned to Waiter no. "
         + std::to_string(best_waiter().get_id())
     );
-    
+
     bool found = false;
     for (Waiter &w : waiters)
         if (w.has_table(new_table.get_id()))
         found = true;
-    
+
     if (!found) waiter(new_table).add_table(new_table.get_id());
 
     /// Disable the table from all tables
@@ -147,6 +147,7 @@ void Simulation::handle_clients_exit()
             );
             auto it = std::find(active_tables.begin(), active_tables.end(), table);
             active_tables.erase(it);
+            waiter(table).remove_table(table.get_id());
             break;
         }
     }
@@ -163,6 +164,26 @@ void Simulation::end() noexcept
     // CANNOT WRITE TO FILE WHEN CONST
     communicate("Pizzeria is closing...");
     communicate("Total earnings: " + std::to_string(total_earned / 100) + "." + std::to_string(total_earned % 100));
+}
+
+bool operator<(long num, const Event &event)
+{
+    return num <= static_cast<long>(event);
+}
+
+bool operator>=(long num, const Event &event)
+{
+    return !(num < event);
+}
+
+bool operator>(long num, const Event &event)
+{
+    return num > static_cast<long>(event);
+}
+
+bool operator<=(long num, const Event &event)
+{
+    return !(num > event);
 }
 
 const std::string Simulation::get_curr_event_str() const noexcept
@@ -202,7 +223,10 @@ void Simulation::update_event()
     else if (active_tables.empty())
         current_event = Event::NewClients;
     else if (active_tables.size() == all_tables.size())
-        current_event = Event::ModTable;
+        if (RandomNumber::RandRange(98, 148) > Event::KitchenAccident)
+            current_event = Event::ModTable;
+        else
+            current_event = Event::KitchenAccident;
     else current_event = rand_event();
 }
 
@@ -284,14 +308,9 @@ Table Simulation::generate_table(const TableSize &size)
     return temp_table;
 }
 
-bool operator<=(long long num, const Event &event)
-{
-    return num <= static_cast<long long>(event);
-}
-
 Event Simulation::rand_event() const noexcept
 {
-    long long random_num = RandomNumber::RandRange(1, 100);
+    long random_num = RandomNumber::RandRange(1, 100);
     if (random_num <= Event::ModTable)
         return Event::ModTable;
     else if (random_num <= Event::NewClients)
@@ -312,5 +331,5 @@ void Simulation::communicate(std::string message, unsigned short time) noexcept
 {
     std::cout << message << std::endl;
     logs << message;
-    sleep(time);
+    // sleep(time);
 }
