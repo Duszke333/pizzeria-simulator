@@ -22,6 +22,7 @@ int main(int argc, char* argv[])
         if (standard_tables <= 0) throw std::invalid_argument("4");
         int big_tables = std::atoi(argv[5]);
         if (big_tables <= 0) throw std::invalid_argument("5");
+        // argv[6] amount of waiters
         int waiters = std::atoi(argv[6]);
         if (waiters <= 0) throw std::invalid_argument("6");
         Read reader(argv[1]);
@@ -32,10 +33,7 @@ int main(int argc, char* argv[])
             std::make_pair<int, TableSize>(std::atoi(argv[3]), TableSize::small),
             std::make_pair<int, TableSize>(std::atoi(argv[4]), TableSize::standard),
             std::make_pair<int, TableSize>(std::atoi(argv[5]), TableSize::big),
-
         };
-
-        // argv[6] amount of waiters
 
         Simulation sim(time, menu, tables, waiters);
         sim.start();

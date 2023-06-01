@@ -160,6 +160,26 @@ void Simulation::end() noexcept
     communicate("Total earnings: " + std::to_string(total_earned / 100) + "." + std::to_string(total_earned % 100));
 }
 
+bool operator<(long num, const Event &event)
+{
+    return num <= static_cast<long>(event);
+}
+
+bool operator>=(long num, const Event &event)
+{
+    return !(num < event);
+}
+
+bool operator>(long num, const Event &event)
+{
+    return num > static_cast<long>(event);
+}
+
+bool operator<=(long num, const Event &event)
+{
+    return !(num > event);
+}
+
 const std::string Simulation::get_curr_event_str() const noexcept
 {
     switch (current_event)
@@ -197,7 +217,10 @@ void Simulation::update_event()
     else if (active_tables.empty())
         current_event = Event::NewClients;
     else if (active_tables.size() == all_tables.size())
-        current_event = Event::ModTable;
+        if (RandomNumber::RandRange(98, 148) > Event::KitchenAccident)
+            current_event = Event::ModTable;
+        else
+            current_event = Event::KitchenAccident;
     else current_event = rand_event();
 }
 
@@ -278,14 +301,9 @@ Table Simulation::generate_table(const TableSize &size)
     return temp_table;
 }
 
-bool operator<=(long long num, const Event &event)
-{
-    return num <= static_cast<long long>(event);
-}
-
 Event Simulation::rand_event() const noexcept
 {
-    long long random_num = RandomNumber::RandRange(1, 100);
+    long random_num = RandomNumber::RandRange(1, 100);
     if (random_num <= Event::ModTable)
         return Event::ModTable;
     else if (random_num <= Event::NewClients)
