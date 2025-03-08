@@ -1,0 +1,63 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++.exe kompiluj aktywny plik",
+            // "command": "C:\\msys64\\mingw64\\bin\\g++.exe",
+            "command": "/usr/bin/g++",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                //Wersja dla Windowsa:
+                // "${workspaceFolder}\\*.cpp",
+                // trzeba również dołączyć pliki znajdujące się "poziom wyżej", ale bez funkcji main (dlatego nie ma tu ..\\*.cpp, tylko wskazany jest konkretny plik)
+                // "${workspaceFolder}\\..\\adder.cpp",
+                // "-o",
+                // "${workspaceFolder}\\${workspaceFolderBasename}.exe",
+                //Wersja dla Linuxa:
+                "${workspaceFolder}/*.cpp",
+                //trzeba również dołączyć pliki znajdujące się "poziom wyżej", ale bez funkcji main (dlatego nie ma tu ../*.cpp, tylko wskazany jest konkretny plik)
+                "${workspaceFolder}/../food.cpp",
+                "${workspaceFolder}/../free_food_exception.cpp",
+                "${workspaceFolder}/../instant_food_exception.cpp",
+                "${workspaceFolder}/../pizza.cpp",
+                "${workspaceFolder}/../drink.cpp",
+                "${workspaceFolder}/../appetizer.cpp",
+                "${workspaceFolder}/../menu.cpp",
+                "${workspaceFolder}/../food_not_found_exception.cpp",
+                "${workspaceFolder}/../no_food_exception.cpp",
+                "${workspaceFolder}/../human.cpp",
+                "${workspaceFolder}/../client.cpp",
+                "${workspaceFolder}/../no_work_exception.cpp",
+                "${workspaceFolder}/../double_work_exception.cpp",
+                "${workspaceFolder}/../waiter.cpp",
+                "${workspaceFolder}/../group.cpp",
+                "${workspaceFolder}/../client_already_in_exception.cpp",
+                "${workspaceFolder}/../client_already_awaiting_exception.cpp",
+                "${workspaceFolder}/../client_not_invited_exception.cpp",
+                "${workspaceFolder}/../order.cpp",
+                "${workspaceFolder}/../order_empty_exception.cpp",
+                "${workspaceFolder}/../table.cpp",
+                "${workspaceFolder}/../table_not_ready_exception.cpp",
+                "${workspaceFolder}/../invalid_group_size_exception.cpp",
+                "${workspaceFolder}/../RandomNumber.cpp",
+                "-o",
+                "${workspaceFolder}/${workspaceFolderBasename}",
+                "-Wall",
+                "-Werror"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Zadanie wygenerowane przez debuger."
+        }
+    ],
+    "version": "2.0.0"
+}

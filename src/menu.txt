@@ -1,0 +1,16 @@
+DRINK,Coffee,799
+DRINK,Coca Cola,599
+DRINK,Tea,699
+APPETIZER,Breadsticks,999,2
+APPETIZER,Garlic bread,1299,3
+APPETIZER,Scallops,1599,4
+PIZZA,Margherita,2199,4
+PIZZA,Pepperoni,2499,5
+PIZZA,Quattro fromaggi,2399,4
+PIZZA,Hawaiian,2599,5
+PIZZA,Mexicana,2699,5
+PIZZA,Vegetariana,2899,4
+PIZZA,Funghi,2799,4
+PIZZA,Fruity,2699,4
+PIZZA,Bolognese,2999,5
+PIZZA,Cantonese,3199,6
