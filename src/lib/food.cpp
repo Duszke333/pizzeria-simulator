@@ -1,7 +1,7 @@
 #include <iostream>
 #include "food.h"
-#include "free_food_exception.h"
-#include "instant_food_exception.h"
+#include "exceptions/free_food_exception.h"
+#include "exceptions/instant_food_exception.h"
 
 
 Food::Food(std::string the_name, unsigned int the_price, unsigned short prep_time) :

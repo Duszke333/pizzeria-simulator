@@ -1,8 +1,8 @@
 #include <algorithm>
 #include "group.h"
-#include "client_already_in_exception.h"
-#include "client_already_awaiting_exception.h"
-#include "client_not_invited_exception.h"
+#include "exceptions/client_already_in_exception.h"
+#include "exceptions/client_already_awaiting_exception.h"
+#include "exceptions/client_not_invited_exception.h"
 
 
 Group::Group() :

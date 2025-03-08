@@ -2,8 +2,8 @@
 #include "Simulation.h"
 #include <array>
 #include <utility>
-#include "bad_file_exception.h"
-#include "missing_data_exception.h"
+#include "exceptions/bad_file_exception.h"
+#include "exceptions/missing_data_exception.h"
 
 int main(int argc, char* argv[])
 {

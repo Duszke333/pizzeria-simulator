@@ -1,6 +1,6 @@
 #include "waiter.h"
-#include "double_work_exception.h"
-#include "no_work_exception.h"
+#include "exceptions/double_work_exception.h"
+#include "exceptions/no_work_exception.h"
 
 
 Waiter::Waiter(unsigned int index) : 

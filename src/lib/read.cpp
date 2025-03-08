@@ -1,6 +1,6 @@
 #include "read.h"
-#include "bad_file_exception.h"
-#include "missing_data_exception.h"
+#include "exceptions/bad_file_exception.h"
+#include "exceptions/missing_data_exception.h"
 #include <fstream>
 #include <string>
 #include <stdexcept>

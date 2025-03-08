@@ -1,8 +1,8 @@
 #include <iostream>
 #include <algorithm>
 #include "menu.h"
-#include "food_not_found_exception.h"
-#include "no_food_exception.h"
+#include "exceptions/food_not_found_exception.h"
+#include "exceptions/no_food_exception.h"
 #include "RandomNumber.h"
 
 

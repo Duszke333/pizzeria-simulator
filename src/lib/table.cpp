@@ -1,7 +1,7 @@
 #include <iostream>
 #include "table.h"
-#include "table_not_ready_exception.h"
-#include "invalid_group_size_exception.h"
+#include "exceptions/table_not_ready_exception.h"
+#include "exceptions/invalid_group_size_exception.h"
 #include "RandomNumber.h"
 
 void Table::place_order()
